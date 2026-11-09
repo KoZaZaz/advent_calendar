@@ -8,21 +8,21 @@
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         :root {
-            /* Тёплая, сумеречная палитра */
-            --bg-base: #1a1423;
-            --glass-bg: rgba(255, 235, 220, 0.06);
-            --glass-border: rgba(255, 200, 150, 0.15);
-            --glass-highlight: rgba(255, 220, 180, 0.3);
+            /* Премиальная, холодная палитра (Лед и Северное сияние) */
+            --bg-base: #050a0e;
+            --glass-bg: rgba(10, 25, 35, 0.4);
+            --glass-border: rgba(150, 220, 255, 0.15);
+            --glass-highlight: rgba(200, 240, 255, 0.4);
             
-            --text: #fff5ec;
-            --text-dim: #d1bfae;
+            --text: #e6f1f5;
+            --text-dim: #8ba5b5;
             
-            --accent-warm: #ffb86c;
-            --accent-glow: #ff9e5e;
-            --accent-cool: #ffd580;
+            /* Акценты: бирюзовый и ледяной голубой */
+            --accent-main: #4df0d0; 
+            --accent-glow: #a0f0ff;
             
-            --success: #8ce4b8;
-            --error: #ff8a8a;
+            --success: #4df0d0;
+            --error: #ff6b6b;
         }
 
         html, body { height: 100%; }
@@ -37,17 +37,16 @@
             overflow-x: hidden;
         }
 
-        /* ============ ФОН: ТЁПЛЫЕ СУМЕРКИ ============ */
+        /* ============ ФОН: АТМОСФЕРА СЕВЕРНОГО СИЯНИЯ ============ */
         .bg-layer {
             position: fixed; inset: 0; z-index: -3;
             background:
-                radial-gradient(circle at 50% 10%, rgba(255, 158, 94, 0.15) 0%, transparent 60%),
-                radial-gradient(circle at 10% 90%, rgba(200, 100, 150, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 90% 90%, rgba(255, 180, 100, 0.1) 0%, transparent 50%),
-                linear-gradient(to bottom, #1e162b 0%, #121018 100%);
+                radial-gradient(circle at 20% 10%, rgba(0, 255, 200, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 90%, rgba(0, 150, 255, 0.15) 0%, transparent 50%),
+                linear-gradient(to bottom, #071018 0%, #030608 100%);
         }
 
-        /* Плавающие огоньки (боке) */
+        /* Плавающие огоньки (теперь как звезды/пыль) */
         .bokeh {
             position: fixed;
             inset: 0;
@@ -60,16 +59,16 @@
             position: absolute;
             display: block;
             border-radius: 50%;
-            background: rgba(255, 200, 100, 0.4);
-            box-shadow: 0 0 20px 10px rgba(255, 150, 50, 0.2);
-            animation: floatUp 15s infinite linear;
+            background: rgba(160, 240, 255, 0.4);
+            box-shadow: 0 0 20px 10px rgba(77, 240, 208, 0.15);
+            animation: floatUp 20s infinite linear;
             opacity: 0;
         }
 
         @keyframes floatUp {
             0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
-            20% { opacity: 0.8; }
-            80% { opacity: 0.6; }
+            20% { opacity: 0.6; }
+            80% { opacity: 0.4; }
             100% { transform: translateY(-20vh) scale(1.5); opacity: 0; }
         }
 
@@ -82,7 +81,7 @@
             position: relative;
         }
 
-        /* ============ ИНТРО (ЛОГОТИП) ============ */
+        /* ============ ИНТРО (ЭКРАН С ЛОГОТИПОМ) ============ */
         #screen-intro {
             position: fixed;
             inset: 0;
@@ -90,7 +89,7 @@
             justify-content: center;
             align-items: center;
             z-index: 5000;
-            background: #121018;
+            background: #030608; /* Глубокий черный для контраста */
             transition: opacity 1s ease, visibility 1s ease;
         }
 
@@ -100,17 +99,19 @@
         }
 
         .intro-logo {
-            width: 180px;
+            width: 200px;
             height: auto;
+            /* Анимация появления и растворения */
             animation: logoAppear 3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-            filter: drop-shadow(0 0 30px rgba(255, 184, 108, 0.3));
+            /* Ледяное свечение вокруг логотипа */
+            filter: drop-shadow(0 0 30px rgba(160, 240, 255, 0.2));
         }
 
         @keyframes logoAppear {
-            0% { opacity: 0; transform: scale(0.8) translateY(20px); }
+            0% { opacity: 0; transform: scale(0.9) translateY(15px); }
             30% { opacity: 1; transform: scale(1) translateY(0); }
-            80% { opacity: 1; transform: scale(1) translateY(0); filter: drop-shadow(0 0 40px rgba(255, 184, 108, 0.5)); }
-            100% { opacity: 0; transform: scale(1.1) translateY(-10px); }
+            80% { opacity: 1; transform: scale(1) translateY(0); filter: drop-shadow(0 0 50px rgba(77, 240, 208, 0.5)); }
+            100% { opacity: 0; transform: scale(1.05) translateY(-10px); }
         }
 
         /* ============ СТЕКЛЯННАЯ ПАНЕЛЬ ============ */
@@ -120,12 +121,12 @@
             margin: 0 auto;
             padding: 40px;
             background: var(--glass-bg);
-            backdrop-filter: blur(24px) saturate(120%);
-            -webkit-backdrop-filter: blur(24px) saturate(120%);
+            backdrop-filter: blur(30px) saturate(150%);
+            -webkit-backdrop-filter: blur(30px) saturate(150%);
             border: 1px solid var(--glass-border);
             border-radius: 26px;
             box-shadow:
-                0 20px 60px rgba(0, 0, 0, 0.5),
+                0 20px 60px rgba(0, 0, 0, 0.6),
                 inset 0 1px 0 var(--glass-highlight);
         }
 
@@ -159,20 +160,21 @@
 
         .header h1 {
             font-size: 32px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
+            font-weight: 600;
+            letter-spacing: 1px;
             margin-bottom: 8px;
-            background: linear-gradient(180deg, #fff5ec, var(--accent-warm));
+            /* Серебристо-голубой градиент */
+            background: linear-gradient(180deg, #ffffff, #8ba5b5);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 20px rgba(255, 184, 108, 0.2);
+            text-shadow: 0 0 20px rgba(160, 240, 255, 0.2);
         }
 
         .header .subtitle {
             font-size: 13px;
             color: var(--text-dim);
-            letter-spacing: 3px;
+            letter-spacing: 4px;
             text-transform: uppercase;
         }
 
@@ -184,19 +186,19 @@
 
         .form-group label {
             display: block;
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-dim);
             margin-bottom: 8px;
-            letter-spacing: 0.5px;
-            transition: color 0.3s;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
         .form-group input {
             width: 100%;
-            padding: 15px 18px;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 200, 150, 0.15);
-            border-radius: 14px;
+            padding: 16px 18px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(150, 220, 255, 0.1);
+            border-radius: 12px;
             color: var(--text);
             font-size: 16px;
             font-family: inherit;
@@ -205,13 +207,13 @@
         }
 
         .form-group input::placeholder {
-            color: rgba(255, 245, 236, 0.3);
+            color: rgba(230, 241, 245, 0.2);
         }
 
         .form-group input:focus {
-            border-color: var(--accent-warm);
-            background: rgba(255, 184, 108, 0.05);
-            box-shadow: 0 0 20px rgba(255, 184, 108, 0.15);
+            border-color: var(--accent-main);
+            background: rgba(77, 240, 208, 0.05);
+            box-shadow: 0 0 20px rgba(77, 240, 208, 0.15);
         }
 
         .form-row {
@@ -228,34 +230,36 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            padding: 15px 24px;
-            font-size: 16px;
+            padding: 16px 24px;
+            font-size: 15px;
             font-weight: 600;
-            letter-spacing: 0.5px;
-            color: #1a1423;
-            background: linear-gradient(135deg, #ffd580, #ffb86c);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #050a0e;
+            /* Кнопка цвета льда */
+            background: linear-gradient(135deg, #a0f0ff, #4df0d0);
             border: none;
-            border-radius: 14px;
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 8px 20px rgba(255, 184, 108, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 25px rgba(77, 240, 208, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.8);
             margin-top: 10px;
         }
 
         .btn:hover:not(:disabled) {
             transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 12px 25px rgba(255, 184, 108, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            box-shadow: 0 12px 30px rgba(77, 240, 208, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.8);
         }
 
         .btn:disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(0.5); }
 
         .btn.ghost {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.03);
             color: var(--text);
-            border: 1px solid rgba(255, 200, 150, 0.2);
+            border: 1px solid rgba(150, 220, 255, 0.15);
             box-shadow: none;
         }
-        .btn.ghost:hover { background: rgba(255, 255, 255, 0.1); }
+        .btn.ghost:hover { background: rgba(255, 255, 255, 0.08); }
         .btn.full { width: 100%; }
 
         /* ============ СЕТКА КАЛЕНДАРЯ ============ */
@@ -312,43 +316,43 @@
 
         .day-number {
             font-size: 26px;
-            font-weight: 700;
+            font-weight: 600;
             line-height: 1;
             transition: transform 0.3s;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
 
         .day-label {
             font-size: 10px;
             letter-spacing: 1px;
             text-transform: uppercase;
-            opacity: 0.6;
+            opacity: 0.5;
             margin-top: 2px;
         }
 
         .day-card.available {
-            background: linear-gradient(135deg, rgba(255, 158, 94, 0.15), rgba(255, 213, 128, 0.1));
-            border-color: rgba(255, 184, 108, 0.4);
+            background: linear-gradient(135deg, rgba(77, 240, 208, 0.1), rgba(160, 240, 255, 0.05));
+            border-color: rgba(77, 240, 208, 0.3);
         }
 
         .day-card:hover, .day-card:active {
             transform: translateY(-8px) scale(1.05);
-            box-shadow: 0 0 30px rgba(255, 184, 108, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-            border-color: rgba(255, 184, 108, 0.8);
+            box-shadow: 0 0 30px rgba(77, 240, 208, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            border-color: rgba(77, 240, 208, 0.8);
         }
 
         .day-card:hover .day-number, .day-card.available .day-number {
-            color: var(--accent-cool);
+            color: var(--accent-main);
         }
 
         .day-card:hover .day-label, .day-card.available .day-label {
-            color: var(--accent-warm);
+            color: var(--accent-main);
             opacity: 1;
         }
 
         .day-card.completed {
-            background: rgba(140, 228, 184, 0.08);
-            border-color: rgba(140, 228, 184, 0.3);
+            background: rgba(77, 240, 208, 0.05);
+            border-color: rgba(77, 240, 208, 0.2);
         }
         .day-card.completed .day-number { color: var(--success); }
         .day-card.completed .day-label { color: var(--success); }
@@ -358,12 +362,12 @@
             top: 8px; right: 10px;
             color: var(--success);
             font-size: 14px; font-weight: 700;
-            text-shadow: 0 0 10px rgba(140, 228, 184, 0.5);
+            text-shadow: 0 0 10px rgba(77, 240, 208, 0.5);
         }
 
         .day-card.locked {
             cursor: not-allowed;
-            opacity: 0.35;
+            opacity: 0.2;
             filter: grayscale(1);
             animation: none;
         }
@@ -378,8 +382,8 @@
         }
 
         .back-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 200, 150, 0.15);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(150, 220, 255, 0.15);
             color: var(--text-dim);
             padding: 8px 14px;
             border-radius: 10px;
@@ -387,22 +391,22 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .back-btn:hover { background: rgba(255, 255, 255, 0.1); color: var(--text); }
+        .back-btn:hover { background: rgba(255, 255, 255, 0.08); color: var(--text); }
 
         .day-badge {
             padding: 6px 14px;
-            background: rgba(255, 184, 108, 0.1);
-            border: 1px solid rgba(255, 184, 108, 0.3);
+            background: rgba(77, 240, 208, 0.1);
+            border: 1px solid rgba(77, 240, 208, 0.3);
             border-radius: 100px;
             font-size: 12px;
-            color: var(--accent-warm);
+            color: var(--accent-main);
             letter-spacing: 1px;
             text-transform: uppercase;
         }
 
         .progress {
             height: 6px;
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 3px;
             overflow: hidden;
             margin-bottom: 14px;
@@ -412,8 +416,8 @@
             height: 100%;
             width: 0%;
             border-radius: 3px;
-            background: linear-gradient(90deg, var(--accent-warm), var(--accent-cool));
-            box-shadow: 0 0 12px rgba(255, 184, 108, 0.5);
+            background: linear-gradient(90deg, var(--accent-main), var(--accent-glow));
+            box-shadow: 0 0 15px rgba(77, 240, 208, 0.6);
             transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -427,10 +431,9 @@
         .question {
             font-size: 19px;
             line-height: 1.55;
-            font-weight: 500;
+            font-weight: 400;
             margin-bottom: 24px;
             color: #fff;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
         .options {
@@ -444,23 +447,23 @@
             align-items: center;
             gap: 14px;
             padding: 16px 20px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 200, 150, 0.1);
-            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(150, 220, 255, 0.08);
+            border-radius: 14px;
             cursor: pointer;
             transition: all 0.25s ease;
             font-size: 15px;
         }
 
         .option:hover {
-            background: rgba(255, 184, 108, 0.08);
-            border-color: rgba(255, 184, 108, 0.4);
+            background: rgba(77, 240, 208, 0.05);
+            border-color: rgba(77, 240, 208, 0.3);
             transform: translateX(4px);
         }
 
         .option .marker {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
             border: 1.5px solid rgba(255, 255, 255, 0.3);
             flex-shrink: 0;
@@ -469,45 +472,44 @@
         }
 
         .option.selected {
-            background: rgba(255, 184, 108, 0.15);
-            border-color: rgba(255, 184, 108, 0.6);
-            box-shadow: 0 0 20px rgba(255, 184, 108, 0.15);
+            background: rgba(77, 240, 208, 0.1);
+            border-color: rgba(77, 240, 208, 0.6);
         }
-        .option.selected .marker { border-color: var(--accent-warm); }
+        .option.selected .marker { border-color: var(--accent-main); }
         .option.selected .marker::after {
             content: '';
             position: absolute;
             inset: 3px;
             border-radius: 50%;
-            background: var(--accent-warm);
-            box-shadow: 0 0 10px var(--accent-warm);
+            background: var(--accent-main);
+            box-shadow: 0 0 10px var(--accent-main);
         }
 
         .option.correct {
-            background: rgba(140, 228, 184, 0.12);
-            border-color: rgba(140, 228, 184, 0.6);
+            background: rgba(77, 240, 208, 0.15);
+            border-color: rgba(77, 240, 208, 0.6);
         }
         .option.correct .marker { border-color: var(--success); background: var(--success); box-shadow: 0 0 10px var(--success); }
 
         .option.wrong {
-            background: rgba(255, 138, 138, 0.1);
-            border-color: rgba(255, 138, 138, 0.5);
+            background: rgba(255, 107, 107, 0.1);
+            border-color: rgba(255, 107, 107, 0.5);
         }
         .option.wrong .marker { border-color: var(--error); background: var(--error); }
 
         /* ============ РЕЗУЛЬТАТ ============ */
         .result { text-align: center; }
-        .result h2 { font-size: 24px; margin-bottom: 12px; }
+        .result h2 { font-size: 24px; margin-bottom: 12px; font-weight: 500;}
 
         .score {
-            font-size: 58px;
+            font-size: 64px;
             font-weight: 700;
             margin: 20px 0 8px;
-            background: linear-gradient(135deg, #fff, var(--accent-warm));
+            background: linear-gradient(135deg, #ffffff, var(--accent-main));
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 40px rgba(255, 184, 108, 0.4);
+            text-shadow: 0 0 40px rgba(77, 240, 208, 0.3);
         }
 
         .result-text {
@@ -524,16 +526,16 @@
             left: 50%;
             transform: translate(-50%, 140%);
             padding: 13px 24px;
-            background: rgba(30, 22, 43, 0.9);
+            background: rgba(10, 25, 35, 0.9);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 200, 150, 0.2);
-            border-radius: 14px;
+            border: 1px solid rgba(77, 240, 208, 0.3);
+            border-radius: 12px;
             color: var(--text);
             font-size: 14px;
             z-index: 1000;
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
             max-width: calc(100vw - 40px);
             text-align: center;
         }
@@ -541,7 +543,7 @@
 
         .overlay {
             position: fixed; inset: 0;
-            background: rgba(26, 20, 35, 0.8);
+            background: rgba(5, 10, 14, 0.8);
             backdrop-filter: blur(14px);
             display: none;
             justify-content: center; align-items: center;
@@ -551,8 +553,8 @@
         .overlay-content {
             max-width: 420px;
             padding: 34px;
-            background: rgba(255, 138, 138, 0.08);
-            border: 1px solid rgba(255, 138, 138, 0.3);
+            background: rgba(255, 107, 107, 0.05);
+            border: 1px solid rgba(255, 107, 107, 0.3);
             border-radius: 22px;
         }
         .overlay-content h2 { font-size: 22px; color: #ffb4b4; margin-bottom: 12px; }
@@ -565,25 +567,26 @@
 </head>
 <body>
 
-    <!-- ЭКРАН ИНТРО (ЛОГОТИП) -->
+    <!-- ЭКРАН ИНТРО -->
     <div id="screen-intro">
-        <!-- Логотип встроен в формате SVG. Надписи удалены, оставлены только книга и цифры -->
-        <svg class="intro-logo" viewBox="0 0 500 400" xmlns="http://www.w3.org/2000/svg">
-            <!-- Левая страница книги (темно-синяя) -->
-            <path d="M 50 50 C 150 50, 230 100, 250 150 L 250 350 C 230 300, 150 250, 50 250 Z" fill="#00478f"/>
-            <!-- Правая страница книги (светло-синяя) -->
-            <path d="M 450 50 C 350 50, 270 100, 250 150 L 250 350 C 270 300, 350 250, 450 250 Z" fill="#0073c8"/>
+        <!-- Чистый SVG-логотип, встроенный прямо в код -->
+        <svg class="intro-logo" viewBox="0 0 400 320" xmlns="http://www.w3.org/2000/svg">
+            <!-- Левая половина книги (темно-синяя) -->
+            <path d="M 40 40 C 120 40, 180 80, 200 110 L 200 280 C 180 250, 120 210, 40 210 Z" fill="#00478f"/>
             
-            <!-- Цифра 4 (белая) -->
-            <path d="M 190 140 L 150 230 L 190 230 L 190 270 L 220 270 L 220 230 L 210 230 L 210 210 L 190 210 L 190 140 Z" fill="#ffffff"/>
+            <!-- Правая половина книги (светло-синяя) -->
+            <path d="M 360 40 C 280 40, 220 80, 200 110 L 200 280 C 220 250, 280 210, 360 210 Z" fill="#0073c8"/>
             
-            <!-- Цифра 9 (белая) -->
-            <path d="M 320 160 A 35 35 0 1 0 320 230 L 315 230 L 315 270 L 285 270 L 285 195 A 55 55 0 1 1 340 160 Z" fill="#ffffff"/>
+            <!-- Круг внизу по центру (перекрывает обе половины) -->
+            <circle cx="200" cy="200" r="28" fill="#ffffff"/>
+            <!-- Линия от круга вниз -->
+            <path d="M 192 200 L 192 265 L 208 265 L 208 200 Z" fill="#ffffff"/>
+
+            <!-- Цифра 4 (слева) -->
+            <path d="M 120 100 L 70 190 L 120 190 L 120 230 L 150 230 L 150 190 L 140 190 L 140 170 L 120 170 L 120 100 Z" fill="#ffffff"/>
             
-            <!-- Кружок внизу по центру -->
-            <circle cx="250" cy="250" r="25" fill="#ffffff"/>
-            <!-- Линия от кружка вниз -->
-            <rect x="245" y="250" width="10" height="60" fill="#ffffff"/>
+            <!-- Цифра 9 (справа) -->
+            <path d="M 260 120 C 260 90, 310 90, 310 120 C 310 150, 260 170, 260 210 L 285 210 C 285 180, 335 150, 335 120 C 335 70, 235 70, 235 120 Z" fill="#ffffff"/>
         </svg>
     </div>
 
@@ -609,7 +612,7 @@
         <div id="screen-register" class="screen">
             <div class="glass-panel">
                 <div class="header">
-                    <h1>Добро пожаловать!</h1>
+                    <h1>Добро пожаловать</h1>
                     <div class="subtitle">Давайте познакомимся</div>
                 </div>
                 
@@ -627,15 +630,15 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label>Класс</label>
-                            <input type="number" id="regClass" placeholder="Например: 10" min="1" max="11" required>
+                            <input type="number" id="regClass" placeholder="10" min="1" max="11" required>
                         </div>
                         <div class="form-group">
                             <label>Литер</label>
-                            <input type="text" id="regLetter" placeholder="А, Б, В..." maxlength="2" required style="text-transform: uppercase;">
+                            <input type="text" id="regLetter" placeholder="А" maxlength="2" required style="text-transform: uppercase;">
                         </div>
                     </div>
 
-                    <button type="submit" class="btn full">Начать путешествие</button>
+                    <button type="submit" class="btn full">Войти</button>
                 </form>
             </div>
         </div>
@@ -671,7 +674,7 @@
         <!-- ============ ЭКРАН РЕЗУЛЬТАТА ============ -->
         <div id="screen-result" class="screen">
             <div class="glass-panel result">
-                <h2>День пройден!</h2>
+                <h2>День пройден</h2>
                 <div class="score" id="score"></div>
                 <div class="result-text" id="resultText"></div>
                 <button class="btn ghost" onclick="backToCalendar()">← К календарю</button>
@@ -682,10 +685,10 @@
         <div id="screen-blocked" class="screen">
             <div class="glass-panel blocked-screen" style="text-align:center;">
                 <div class="icon" style="font-size:56px; margin-bottom:14px;">🚫</div>
-                <h2 style="color:#ff9d9d; margin-bottom:12px;">Тест заблокирован</h2>
+                <h2 style="color:#ff9d9d; margin-bottom:12px; font-weight: 500;">Тест заблокирован</h2>
                 <p style="color:var(--text-dim); margin-bottom:8px;">Вы покинули страницу во время прохождения теста.</p>
                 <p style="color:var(--text-dim); margin-bottom:20px;">Попытка считается недействительной.</p>
-                <div class="warning" id="blockedReason" style="margin-bottom:20px; padding:14px; background:rgba(255,138,138,0.08); border:1px solid rgba(255,138,138,0.3); border-radius:12px; color:#ffb4b4; font-size:13px; text-align:left;"></div>
+                <div class="warning" id="blockedReason" style="margin-bottom:20px; padding:14px; background:rgba(255,107,107,0.05); border:1px solid rgba(255,107,107,0.3); border-radius:12px; color:#ffb4b4; font-size:13px; text-align:left;"></div>
                 <button class="btn ghost" onclick="backToCalendar()">← К календарю</button>
             </div>
         </div>
@@ -696,7 +699,7 @@
         /* ============================================================
            ⚙️ НАСТРОЙКИ
            ============================================================ */
-        const TEST_MODE = true; // true = все дни открыты для теста. false = реальный режим.
+        const TEST_MODE = true; 
         const YEAR = new Date().getFullYear();
         const TOTAL_DAYS = 24;
         
@@ -825,13 +828,13 @@
             
             if (TEST_MODE) {
                 todayInfo.textContent = `🧪 Режим тестирования: доступны все дни`;
-                todayInfo.style.color = '#8ce4b8';
-                todayInfo.style.borderColor = 'rgba(140, 228, 184, 0.4)';
-                todayInfo.style.background = 'rgba(140, 228, 184, 0.1)';
+                todayInfo.style.color = '#4df0d0';
+                todayInfo.style.borderColor = 'rgba(77, 240, 208, 0.4)';
+                todayInfo.style.background = 'rgba(77, 240, 208, 0.1)';
             } else {
-                todayInfo.style.color = 'var(--accent-warm)';
-                todayInfo.style.borderColor = 'rgba(255, 184, 108, 0.25)';
-                todayInfo.style.background = 'rgba(255, 184, 108, 0.08)';
+                todayInfo.style.color = 'var(--text)';
+                todayInfo.style.borderColor = 'var(--glass-border)';
+                todayInfo.style.background = 'var(--glass-bg)';
                 
                 const today = getTodayDayNumber();
                 if (today !== null) {
@@ -1121,7 +1124,7 @@
                     ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
                     ctx.fillStyle = `rgba(255, 255, 255, ${f.opacity})`;
                     ctx.shadowBlur = 4;
-                    ctx.shadowColor = 'rgba(255, 200, 150, 0.8)';
+                    ctx.shadowColor = 'rgba(160, 240, 255, 0.8)';
                     ctx.fill();
                 }
                 requestAnimationFrame(draw);
@@ -1154,17 +1157,15 @@
            ============================================================ */
         loadData();
 
-        // Логика интро: показываем логотип 3 секунды, затем убираем
         setTimeout(() => {
             document.getElementById('screen-intro').classList.add('hidden');
             
-            // После исчезновения логотипа проверяем, зарегистрирован ли пользователь
             if (currentUser) {
                 startCalendar();
             } else {
                 showScreen('register');
             }
-        }, 3000); // 3000 мс = 3 секунды
+        }, 3000);
     </script>
 </body>
 </html>
