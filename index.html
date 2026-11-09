@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Новогодний Адвент-календарь</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --glass-highlight: rgba(255, 255, 255, 0.35);
+            --text: #eef3ff;
+            --text-dim: #a8b6d8;
+            --accent: #7cc4ff;
+            --accent-2: #b39bff;
+            --success: #5eead4;
+            --error: #ff8a8a;
+        }
+
+        html, body { height: 100%; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            color: var(--text);
+            background: #0a1024;
+            min-height: 100vh;
+            padding: 30px 15px 60px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ============ ФОН ============ */
+        .bg-layer {
+            position: fixed; inset: 0; z-index: -3;
+            background:
+                radial-gradient(ellipse at 20% 0%, rgba(124, 196, 255, 0.22), transparent 50%),
+                radial-gradient(ellipse at 80% 100%, rgba(179, 155, 255, 0.22), transparent 50%),
+                radial-gradient(ellipse at 50% 50%, #142046 0%, #0a1024 70%);
+        }
+
+        .aurora {
+            position: fixed; inset: -20%; z-index: -2;
+            background:
+                radial-gradient(closest-side, rgba(94, 234, 212, 0.15), transparent),
+                radial-gradient(closest-side, rgba(124, 196, 255, 0.18), transparent);
+            background-size: 60% 60%, 50% 50%;
+            background-position: 20% 30%, 70% 60%;
+            background-repeat: no-repeat;
+            filter: blur(60px);
+            animation: auroraMove 18s ease-in-out infinite alternate;
+        }
+        @keyframes auroraMove {
+            0%   { transform: translate(-5%, -5%) scale(1); }
+            100% { transform: translate(5%, 5%) scale(1.1); }
+        }
+
+        .stars {
+            position: fixed; inset: 0; z-index: -2;
+            background-image:
+                radial-gradient(1.5px 1.5px at 20% 30%, #fff, transparent),
+                radial-gradient(1px 1px at 60% 70%, #cfe6ff, transparent),
+                radial-gradient(1.5px 1.5px at 80% 20%, #fff, transparent),
+                radial-gradient(1px 1px at 40% 80%, #d6e4ff, transparent),
+                radial-gradient(1px 1px at 90% 60%, #fff, transparent);
+            opacity: 0.55;
+            animation: twinkle 5s ease-in-out infinite alternate;
+        }
+        @keyframes twinkle { from { opacity: 0.35; } to { opacity: 0.7; } }
+
+        #snowCanvas { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+
+        /* ============ ОБЩИЙ КОНТЕЙНЕР ============ */
+        .wrapper {
+            max-width: 980px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* ============ ХЕДЕР ============ */
+        .header {
+            text-align: center;
+            margin-bottom: 34px;
+            padding: 10px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            background: linear-gradient(180deg, #ffffff, #c8d8ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header .subtitle {
+            font-size: 13px;
+            color: var(--text-dim);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .header .today-info {
+            margin-top: 18px;
+            display: inline-block;
+            padding: 8px 18px;
+            background: rgba(124, 196, 255, 0.1);
+            border: 1px solid rgba(124, 196, 255, 0.3);
+            border-radius: 100px;
+            font-size: 13px;
+            color: var(--accent);
+            letter-spacing: 0.5px;
+        }
+
+        /* ============ СЕТКА КАЛЕНДАРЯ ============ */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 12px;
+        }
+
+        @media (max-width: 780px) {
+            .calendar-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        }
+        @media (max-width: 480px) {
+            .calendar-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+            .header h1 { font-size: 24px; }
+        }
+
+        /* ============ ОКОШКО ============ */
+        .day-card {
+            aspect-ratio: 1;
+            position: relative;
+            border-radius: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px) saturate(140%);
+            -webkit-backdrop-filter: blur(20px) saturate(140%);
+            border: 1px solid var(--glass-border);
+            box-shadow:
+                0 8px 24px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 var(--glass-highlight);
+        }
+
+        .day-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 18px;
+            background: linear-gradient(140deg,
+                rgba(255, 255, 255, 0.10) 0%,
+                transparent 45%,
+                transparent 60%,
+                rgba(255, 255, 255, 0.03) 100%);
+            pointer-events: none;
+        }
+
+        .day-number {
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1;
+            transition: transform 0.3s;
+        }
+
+        .day-label {
+            font-size: 10px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            opacity: 0.6;
+            margin-top: 2px;
+        }
+
+        /* ---- Доступно СЕГОДНЯ ---- */
+        .day-card.available {
+            background: linear-gradient(135deg,
+                rgba(124, 196, 255, 0.22),
+                rgba(179, 155, 255, 0.22));
+            border-color: rgba(124, 196, 255, 0.65);
+            box-shadow:
+                0 0 0 1px rgba(124, 196, 255, 0.3),
+                0 0 30px rgba(124, 196, 255, 0.4),
+                0 8px 24px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            animation: pulseActive 2.4s ease-in-out infinite;
+        }
+
+        .day-card.available:hover, .day-card.available:active {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow:
+                0 0 0 1px rgba(124, 196, 255, 0.5),
+                0 0 40px rgba(124, 196, 255, 0.6),
+                0 14px 30px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        }
+
+        .day-card.available .day-number {
+            background: linear-gradient(135deg, #ffffff, #a8d8ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .day-card.available .day-label {
+            color: var(--accent);
+            opacity: 1;
+        }
+
+        @keyframes pulseActive {
+            0%, 100% {
+                box-shadow:
+                    0 0 0 1px rgba(124, 196, 255, 0.3),
+                    0 0 30px rgba(124, 196, 255, 0.4),
+                    0 8px 24px rgba(0, 0, 0, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            }
+            50% {
+                box-shadow:
+                    0 0 0 1px rgba(124, 196, 255, 0.5),
+                    0 0 45px rgba(124, 196, 255, 0.6),
+                    0 8px 24px rgba(0, 0, 0, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            }
+        }
+
+        /* ---- Пройдено ---- */
+        .day-card.completed {
+            background: rgba(94, 234, 212, 0.1);
+            border-color: rgba(94, 234, 212, 0.4);
+        }
+        .day-card.completed .day-number { color: var(--success); opacity: 0.8; }
+        .day-card.completed .day-label { color: var(--success); opacity: 0.9; }
+        .day-card.completed::after {
+            content: '✓';
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            color: var(--success);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        /* ---- Заблокировано ---- */
+        .day-card.locked {
+            cursor: not-allowed;
+            opacity: 0.45;
+        }
+        .day-card.locked .day-number { color: var(--text-dim); }
+        .day-card.locked .day-label { color: var(--text-dim); }
+        .day-card.locked::after {
+            content: '🔒';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 20px;
+            opacity: 0.7;
+        }
+        .day-card.locked .day-number, .day-card.locked .day-label { opacity: 0; }
+
+        /* ---- Пропущено ---- */
+        .day-card.missed {
+            cursor: not-allowed;
+            opacity: 0.35;
+            background: rgba(255, 138, 138, 0.05);
+            border-color: rgba(255, 138, 138, 0.2);
+        }
+        .day-card.missed .day-number { color: var(--error); }
+        .day-card.missed::after {
+            content: '✕';
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            color: var(--error);
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        /* ============ ЭКРАНЫ ============ */
+        .screen { display: none; }
+        .screen.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .glass-panel {
+            position: relative;
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 35px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px) saturate(140%);
+            -webkit-backdrop-filter: blur(24px) saturate(140%);
+            border: 1px solid var(--glass-border);
+            border-radius: 26px;
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.45),
+                inset 0 1px 0 var(--glass-highlight);
+        }
+
+        .glass-panel::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 26px;
+            background: linear-gradient(140deg,
+                rgba(255, 255, 255, 0.10) 0%,
+                transparent 40%,
+                transparent 60%,
+                rgba(255, 255, 255, 0.04) 100%);
+            pointer-events: none;
+        }
+
+        @media (max-width: 600px) {
+            .glass-panel { padding: 24px 18px; border-radius: 20px; }
+        }
+
+        /* ============ КНОПКИ ============ */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 13px 22px;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: #0a1024;
+            background: linear-gradient(135deg, #e8f2ff, #c7dcff);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.22s ease;
+            box-shadow:
+                0 8px 24px rgba(124, 196, 255, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow:
+                0 12px 30px rgba(124, 196, 255, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+
+        .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+        .btn.ghost {
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: none;
+        }
+        .btn.ghost:hover { background: rgba(255, 255, 255, 0.1); }
+        .btn.full { width: 100%; }
+
+        /* ============ ТЕСТ ============ */
+        .test-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 12px;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--text-dim);
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .back-btn:hover { background: rgba(255, 255, 255, 0.1); color: var(--text); }
+
+        .day-badge {
+            padding: 6px 14px;
+            background: rgba(124, 196, 255, 0.15);
+            border: 1px solid rgba(124, 196, 255, 0.35);
+            border-radius: 100px;
+            font-size: 12px;
+            color: var(--accent);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .progress {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 14px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            border-radius: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            box-shadow: 0 0 12px rgba(124, 196, 255, 0.6);
+            transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .question-counter {
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 26px;
+        }
+
+        .question {
+            font-size: 19px;
+            line-height: 1.55;
+            font-weight: 500;
+            margin-bottom: 24px;
+            color: #fff;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 15px 18px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.10);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.22s ease;
+            font-size: 15px;
+        }
+
+        .option:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(124, 196, 255, 0.45);
+            transform: translateX(3px);
+        }
+
+        .option .marker {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(255, 255, 255, 0.35);
+            flex-shrink: 0;
+            position: relative;
+            transition: all 0.22s ease;
+        }
+
+        .option.selected {
+            background: rgba(124, 196, 255, 0.14);
+            border-color: rgba(124, 196, 255, 0.7);
+            box-shadow: 0 0 20px rgba(124, 196, 255, 0.15);
+        }
+        .option.selected .marker { border-color: var(--accent); }
+        .option.selected .marker::after {
+            content: '';
+            position: absolute;
+            inset: 3px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 8px var(--accent);
+        }
+
+        .option.correct {
+            background: rgba(94, 234, 212, 0.12);
+            border-color: rgba(94, 234, 212, 0.65);
+        }
+        .option.correct .marker { border-color: var(--success); background: var(--success); }
+
+        .option.wrong {
+            background: rgba(255, 138, 138, 0.10);
+            border-color: rgba(255, 138, 138, 0.6);
+        }
+        .option.wrong .marker { border-color: var(--error); background: var(--error); }
+
+        /* ============ РЕЗУЛЬТАТ ============ */
+        .result { text-align: center; }
+        .result h2 { font-size: 24px; margin-bottom: 12px; }
+
+        .score {
+            font-size: 58px;
+            font-weight: 700;
+            margin: 20px 0 8px;
+            background: linear-gradient(135deg, #ffffff, var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 40px rgba(124, 196, 255, 0.3);
+        }
+
+        .result-text {
+            font-size: 16px;
+            color: var(--text-dim);
+            margin-bottom: 28px;
+            line-height: 1.5;
+        }
+
+        /* ============ БЛОКИРОВКА ============ */
+        .blocked-screen { text-align: center; padding: 10px; }
+        .blocked-screen .icon { font-size: 56px; margin-bottom: 14px; }
+        .blocked-screen h2 { color: #ff9d9d; font-size: 22px; margin-bottom: 12px; }
+        .blocked-screen p { color: var(--text-dim); margin-bottom: 8px; line-height: 1.5; }
+        .blocked-screen .warning {
+            margin-top: 22px;
+            padding: 14px 16px;
+            background: rgba(255, 138, 138, 0.08);
+            border: 1px solid rgba(255, 138, 138, 0.3);
+            border-radius: 12px;
+            color: #ffb4b4;
+            font-size: 13px;
+            text-align: left;
+            line-height: 1.6;
+        }
+
+        /* ============ УВЕДОМЛЕНИЯ ============ */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translate(-50%, 140%);
+            padding: 13px 24px;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 14px;
+            color: var(--text);
+            font-size: 14px;
+            z-index: 1000;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            max-width: calc(100vw - 40px);
+            text-align: center;
+        }
+        .toast.show { transform: translate(-50%, 0); }
+
+        .warning-banner {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translate(-50%, -140%);
+            padding: 12px 22px;
+            background: rgba(255, 152, 0, 0.15);
+            border: 1px solid rgba(255, 180, 80, 0.5);
+            border-radius: 14px;
+            backdrop-filter: blur(20px);
+            color: #ffd28a;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 1000;
+            transition: transform 0.4s;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            max-width: calc(100vw - 40px);
+            text-align: center;
+        }
+        .warning-banner.show { transform: translate(-50%, 0); }
+
+        .overlay {
+            position: fixed; inset: 0;
+            background: rgba(10, 16, 36, 0.75);
+            backdrop-filter: blur(14px);
+            display: none;
+            justify-content: center; align-items: center;
+            padding: 30px; z-index: 2000; text-align: center;
+        }
+        .overlay.show { display: flex; }
+        .overlay-content {
+            max-width: 420px;
+            padding: 34px;
+            background: rgba(255, 138, 138, 0.08);
+            border: 1px solid rgba(255, 138, 138, 0.3);
+            border-radius: 22px;
+        }
+        .overlay-content h2 { font-size: 22px; color: #ffb4b4; margin-bottom: 12px; }
+        .overlay-content p { color: var(--text-dim); font-size: 15px; line-height: 1.6; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Фон -->
+    <div class="bg-layer"></div>
+    <div class="aurora"></div>
+    <div class="stars"></div>
+    <canvas id="snowCanvas"></canvas>
+
+    <!-- Уведомления -->
+    <div class="warning-banner" id="warningBanner"></div>
+    <div class="toast" id="toast"></div>
+
+    <!-- Оверлей -->
+    <div class="overlay" id="overlay">
+        <div class="overlay-content">
+            <h2>⚠️ Обнаружен уход со страницы</h2>
+            <p>Вы переключили вкладку или свернули окно.<br>Это зафиксировано как нарушение.</p>
+        </div>
+    </div>
+
+    <div class="wrapper">
+
+        <!-- ============ ЭКРАН КАЛЕНДАРЯ ============ -->
+        <div id="screen-calendar" class="screen active">
+            <div class="header">
+                <h1>Адвент-календарь</h1>
+                <div class="subtitle">24 дня · 24 испытания</div>
+                <div class="today-info" id="todayInfo"></div>
+            </div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+        </div>
+
+        <!-- ============ ЭКРАН ТЕСТА ============ -->
+        <div id="screen-test" class="screen">
+            <div class="glass-panel">
+                <div class="test-header">
+                    <button class="back-btn" onclick="backToCalendar()">← Назад</button>
+                    <div class="day-badge" id="testDayBadge">День 1</div>
+                    <div style="width: 74px;"></div>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="question-counter" id="questionCounter"></div>
+                <div class="question" id="questionText"></div>
+                <div class="options" id="options"></div>
+                <button class="btn full" id="nextBtn" disabled>Ответить</button>
+            </div>
+        </div>
+
+        <!-- ============ ЭКРАН РЕЗУЛЬТАТА ============ -->
+        <div id="screen-result" class="screen">
+            <div class="glass-panel result">
+                <h2>День пройден!</h2>
+                <div class="score" id="score"></div>
+                <div class="result-text" id="resultText"></div>
+                <button class="btn ghost" onclick="backToCalendar()">← К календарю</button>
+            </div>
+        </div>
+
+        <!-- ============ ЭКРАН БЛОКИРОВКИ ============ -->
+        <div id="screen-blocked" class="screen">
+            <div class="glass-panel blocked-screen">
+                <div class="icon">🚫</div>
+                <h2>Тест заблокирован</h2>
+                <p>Вы покинули страницу во время прохождения теста.</p>
+                <p>Попытка считается недействительной.</p>
+                <div class="warning" id="blockedReason"></div>
+                <br>
+                <button class="btn ghost" onclick="backToCalendar()">← К календарю</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        /* ============================================================
+           КОНФИГ
+           ============================================================ */
+        const YEAR = new Date().getFullYear();
+        const TOTAL_DAYS = 24;
+        const STORAGE_KEY = 'advent_progress_' + YEAR;
+
+        /* ============================================================
+           ВОПРОСЫ
+           ============================================================ */
+        const questionPool = [
+            { question: "Что такое HTML?", options: ["Язык программирования","Язык разметки гипертекста","База данных","Операционная система"], correct: 1 },
+            { question: "Какая функция выводит в консоль?", options: ["print()","echo()","console.log()","alert()"], correct: 2 },
+            { question: "Что означает CSS?", options: ["Cascading Style Sheets","Computer Style System","Creative Style Script","Central Style Sheet"], correct: 0 },
+            { question: "Какого типа данных НЕТ в JavaScript?", options: ["string","boolean","integer","number"], correct: 2 },
+            { question: "Тег для создания ссылки?", options: ["<link>","<a>","<href>","<url>"], correct: 1 },
+            { question: "Что делает тег <img>?", options: ["Добавляет видео","Добавляет картинку","Создает ссылку","Добавляет текст"], correct: 1 },
+            { question: "Где хранятся стили в HTML?", options: ["В теге <script>","В теге <style>","В теге <body>","В теге <meta>"], correct: 1 }
+        ];
+
+        function getQuestionsForDay(day) {
+            const count = 5;
+            const start = (day - 1) % questionPool.length;
+            const questions = [];
+            for (let i = 0; i < count; i++) {
+                questions.push(questionPool[(start + i) % questionPool.length]);
+            }
+            return questions;
+        }
+
+        /* ============================================================
+           СОСТОЯНИЕ И ПЕРЕМЕННЫЕ
+           ============================================================ */
+        let state = { progress: {} };
+        let currentDay = null;
+        let questions = [];
+        let currentQuestion = 0;
+        let score = 0;
+        let selectedAnswer = null;
+        let answered = false;
+
+        // Переменные антисписывания
+        let testActive = false;
+        let violations = 0;
+        let startTime = null;
+
+        /* ============================================================
+           LOCALSTORAGE
+           ============================================================ */
+        function loadProgress() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) state.progress = JSON.parse(raw);
+            } catch (e) {
+                console.warn('Ошибка загрузки прогресса', e);
+            }
+        }
+
+        function saveProgress() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(state.progress));
+            } catch (e) {
+                console.warn('Ошибка сохранения прогресса', e);
+            }
+        }
+
+        /* ============================================================
+           ЛОГИКА ДАТ
+           ============================================================ */
+        function getTodayDayNumber() {
+            const now = new Date();
+            
+            // Для проверки антисписывания можно раскомментировать строку ниже и поставить любой день
+            // return 1; 
+
+            if (now.getMonth() !== 11) return null; // не декабрь
+            if (now.getFullYear() !== YEAR) return null;
+            const day = now.getDate();
+            return (day >= 1 && day <= 24) ? day : null;
+        }
+
+        function getDayStatus(day) {
+            if (state.progress[day]?.completed) return 'completed';
+            const today = getTodayDayNumber();
+            if (today === null) return 'locked';
+            if (day === today) return 'available';
+            if (day < today) return 'missed';
+            return 'locked';
+        }
+
+        /* ============================================================
+           РЕНДЕР КАЛЕНДАРЯ
+           ============================================================ */
+        function renderCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+
+            const todayInfo = document.getElementById('todayInfo');
+            const today = getTodayDayNumber();
+            
+            if (today !== null) {
+                todayInfo.textContent = `Сегодня ${today} декабря · доступно задание дня ${today}`;
+            } else {
+                const now = new Date();
+                if (now.getMonth() === 11 && now.getDate() > 24) {
+                    todayInfo.textContent = 'Декабрь завершён 🎄';
+                } else if (now.getMonth() === 11 && now.getDate() < 1) {
+                    todayInfo.textContent = 'Календарь ещё не открыт';
+                } else {
+                    todayInfo.textContent = 'Календарь откроется 1 декабря';
+                }
+            }
+
+            for (let day = 1; day <= TOTAL_DAYS; day++) {
+                const status = getDayStatus(day);
+                const card = document.createElement('div');
+                card.className = `day-card ${status}`;
+                
+                let labelText = 'Закрыто';
+                if (status === 'completed') labelText = 'Пройдено';
+                else if (status === 'available') labelText = 'Открыть';
+                else if (status === 'missed') labelText = 'Пропущено';
+
+                card.innerHTML = `
+                    <div class="day-number">${day}</div>
+                    <div class="day-label">${labelText}</div>
+                `;
+
+                card.addEventListener('click', () => onDayClick(day, status));
+                grid.appendChild(card);
+            }
+        }
+
+        /* ============================================================
+           КЛИК ПО ДНЮ
+           ============================================================ */
+        function onDayClick(day, status) {
+            if (status === 'available') {
+                openTest(day);
+            } else if (status === 'locked') {
+                const today = getTodayDayNumber();
+                if (today === null) {
+                    showToast('Календарь откроется 1 декабря');
+                } else {
+                    showToast(`Этот день откроется ${day} декабря`);
+                }
+            } else if (status === 'missed') {
+                showToast('Этот день уже прошёл. Пропущенные задания недоступны.');
+            } else if (status === 'completed') {
+                showToast('Вы уже прошли это задание ✓');
+            }
+        }
+
+        /* ============================================================
+           ТЕСТ: ОТКРЫТИЕ И ЛОГИКА
+           ============================================================ */
+        function openTest(day) {
+            currentDay = day;
+            questions = getQuestionsForDay(day);
+            currentQuestion = 0;
+            score = 0;
+            answered = false;
+            selectedAnswer = null;
+            
+            // Сброс антисписывания
+            testActive = true;
+            violations = 0;
+            startTime = Date.now();
+
+            document.getElementById('testDayBadge').textContent = `День ${day}`;
+            showScreen('test');
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            answered = false;
+            selectedAnswer = null;
+            const btn = document.getElementById('nextBtn');
+            btn.disabled = true;
+            btn.textContent = 'Ответить';
+
+            const q = questions[currentQuestion];
+            document.getElementById('questionText').textContent = q.question;
+            document.getElementById('questionCounter').textContent =
+                `Вопрос ${currentQuestion + 1} из ${questions.length}`;
+            document.getElementById('progressBar').style.width =
+                `${(currentQuestion / questions.length) * 100}%`;
+
+            const optionsEl = document.getElementById('options');
+            optionsEl.innerHTML = '';
+
+            q.options.forEach((option, index) => {
+                const div = document.createElement('div');
+                div.className = 'option';
+                div.innerHTML = `<div class="marker"></div><span>${option}</span>`;
+                div.onclick = () => selectOption(index, div);
+                optionsEl.appendChild(div);
+            });
+        }
+
+        function selectOption(index, div) {
+            if (answered) return;
+            document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
+            div.classList.add('selected');
+            selectedAnswer = index;
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        document.getElementById('nextBtn').onclick = () => {
+            if (!answered) {
+                answered = true;
+                const q = questions[currentQuestion];
+                const options = document.querySelectorAll('.option');
+
+                options.forEach((el, i) => {
+                    if (i === q.correct) el.classList.add('correct');
+                    else if (i === selectedAnswer) el.classList.add('wrong');
+                });
+
+                if (selectedAnswer === q.correct) score++;
+
+                const btn = document.getElementById('nextBtn');
+                btn.textContent = currentQuestion < questions.length - 1
+                    ? 'Следующий вопрос'
+                    : 'Показать результат';
+            } else {
+                currentQuestion++;
+                if (currentQuestion < questions.length) {
+                    loadQuestion();
+                } else {
+                    finishDay();
+                }
+            }
+        };
+
+        /* ============================================================
+           ЗАВЕРШЕНИЕ ДНЯ
+           ============================================================ */
+        function finishDay() {
+            testActive = false; // Отключаем антисписывание
+            const total = questions.length;
+
+            state.progress[currentDay] = {
+                completed: true,
+                score: score,
+                total: total,
+                date: new Date().toISOString()
+            };
+            saveProgress();
+
+            const percentage = Math.round((score / total) * 100);
+            document.getElementById('score').textContent = `${score} / ${total}`;
+
+            let text = '';
+            if (percentage === 100) text = '🏆 Идеально! Вы справились на все 100%.';
+            else if (percentage >= 80) text = '🎉 Отлично! Очень хороший результат.';
+            else if (percentage >= 60) text = '👍 Неплохо! Но можно и лучше.';
+            else if (percentage >= 40) text = '📚 Стоит повторить материал.';
+            else text = '💪 Не сдавайтесь! Попробуйте в следующем дне.';
+
+            document.getElementById('resultText').textContent = `${text} (${percentage}%)`;
+            showScreen('result');
+        }
+
+        /* ============================================================
+           НАВИГАЦИЯ И УТИЛИТЫ
+           ============================================================ */
+        function showScreen(name) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('screen-' + name).classList.add('active');
+        }
+
+        function backToCalendar() {
+            if (testActive && !confirm('Выйти из теста? Прогресс текущего дня будет потерян.')) {
+                return;
+            }
+            testActive = false;
+            showScreen('calendar');
+            renderCalendar();
+        }
+
+        let toastTimer = null;
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        /* ============================================================
+           АНТИСПИСЫВАНИЕ
+           ============================================================ */
+        
+        // 1. Уход со страницы (перезагрузка / закрытие)
+        window.addEventListener('beforeunload', (e) => {
+            if (testActive) {
+                e.preventDefault();
+                e.returnValue = 'Вы уверены? Прогресс теста будет потерян!';
+                return e.returnValue;
+            }
+        });
+
+        // 2. Переключение вкладки
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && testActive) {
+                registerViolation('Вы переключились на другую вкладку или свернули окно');
+            }
+        });
+
+        // 3. Потеря фокуса окна
+        window.addEventListener('blur', () => {
+            if (testActive) registerViolation('Окно теста потеряло фокус');
+        });
+
+        // 4. Блокировка контекстного меню
+        document.addEventListener('contextmenu', (e) => {
+            if (testActive) e.preventDefault();
+        });
+
+        // 5. Блокировка горячих клавиш
+        document.addEventListener('keydown', (e) => {
+            if (!testActive) return;
+            const key = e.key.toLowerCase();
+            const ctrl = e.ctrlKey || e.metaKey;
+            const shift = e.shiftKey;
+
+            if (e.key === 'F12' || (ctrl && shift && (key === 'i' || key === 'j' || key === 'c')) || (ctrl && key === 'u')) {
+                e.preventDefault();
+                registerViolation('Попытка открыть инструменты разработчика');
+            }
+            if (ctrl && (key === 'c' || key === 'v' || key === 'a' || key === 'x')) {
+                e.preventDefault();
+            }
+        });
+
+        // 6. Блокировка копирования
+        document.addEventListener('copy', (e) => {
+            if (testActive) e.preventDefault();
+        });
+
+        // 7. Обработка нарушений
+        function registerViolation(reason) {
+            violations++;
+            if (violations >= 2) {
+                blockTest(`Зафиксировано нарушений: ${violations}. Причина последнего: ${reason}`);
+            } else {
+                showOverlayWarning(reason);
+            }
+        }
+
+        let overlayTimer = null;
+        function showOverlayWarning(reason) {
+            const overlay = document.getElementById('overlay');
+            const banner = document.getElementById('warningBanner');
+            
+            overlay.classList.add('show');
+            clearTimeout(overlayTimer);
+            overlayTimer = setTimeout(() => overlay.classList.remove('show'), 3000);
+
+            banner.textContent = `⚠️ Нарушение (${violations}/2): ${reason}`;
+            banner.classList.add('show');
+            setTimeout(() => banner.classList.remove('show'), 4000);
+        }
+
+        function blockTest(reason) {
+            testActive = false;
+            document.getElementById('overlay').classList.remove('show');
+            document.getElementById('warningBanner').classList.remove('show');
+
+            document.getElementById('blockedReason').innerHTML = `
+                <strong>Причина:</strong> ${reason}<br>
+                <strong>Всего нарушений:</strong> ${violations}<br>
+                <strong>Время попытки:</strong> ${Math.round((Date.now() - startTime) / 1000)} сек.
+            `;
+            showScreen('blocked');
+        }
+
+        /* ============================================================
+           СНЕГ
+           ============================================================ */
+        (function initSnow() {
+            const canvas = document.getElementById('snowCanvas');
+            const ctx = canvas.getContext('2d');
+            let width, height, flakes = [];
+            const FLAKE_COUNT = Math.min(100, Math.floor(window.innerWidth / 15));
+
+            function resize() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            }
+
+            function createFlake(randomY = false) {
+                return {
+                    x: Math.random() * width,
+                    y: randomY ? Math.random() * height : -10,
+                    r: Math.random() * 2.2 + 0.6,
+                    speedY: Math.random() * 0.8 + 0.3,
+                    speedX: Math.random() * 0.6 - 0.3,
+                    opacity: Math.random() * 0.5 + 0.35,
+                    sway: Math.random() * Math.PI * 2,
+                    swaySpeed: Math.random() * 0.02 + 0.008
+                };
+            }
+
+            function init() {
+                resize();
+                flakes = [];
+                for (let i = 0; i < FLAKE_COUNT; i++) flakes.push(createFlake(true));
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, width, height);
+                for (const f of flakes) {
+                    f.sway += f.swaySpeed;
+                    f.x += Math.sin(f.sway) * 0.4 + f.speedX;
+                    f.y += f.speedY;
+                    if (f.y > height + 5) { f.y = -5; f.x = Math.random() * width; }
+                    if (f.x > width + 5) f.x = -5;
+                    if (f.x < -5) f.x = width + 5;
+
+                    ctx.beginPath();
+                    ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(255, 255, 255, ${f.opacity})`;
+                    ctx.shadowBlur = 6;
+                    ctx.shadowColor = 'rgba(200, 225, 255, 0.6)';
+                    ctx.fill();
+                }
+                requestAnimationFrame(draw);
+            }
+
+            window.addEventListener('resize', resize);
+            init();
+            draw();
+        })();
+
+        /* ============================================================
+           ИНИЦИАЛИЗАЦИЯ
+           ============================================================ */
+        loadProgress();
+        renderCalendar();
+
+        // Автообновление при смене даты
+        setInterval(() => {
+            if (document.getElementById('screen-calendar').classList.contains('active')) {
+                renderCalendar();
+            }
+        }, 60000);
+
+    </script>
+</body>
+  </html>
