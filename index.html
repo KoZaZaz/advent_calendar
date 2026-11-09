@@ -90,7 +90,7 @@ body {
 /* ЭКРАНЫ */
 .screen { display: none; }
 .screen.active { display: block; }
-.anim-fade-in { animation: fadeInScreen 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+.anim-fade { animation: fadeInScreen 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
 @keyframes fadeInScreen { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
 /* ФОРМА */
@@ -98,10 +98,10 @@ body {
 .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; background: linear-gradient(to right, #fff, var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 .header .subtitle { font-size: 12px; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; font-weight: 500; }
 
-.form-group { margin-bottom: 20px; position: relative; opacity: 0; }
-.form-group:nth-child(1) { animation: slideInForm 0.5s ease forwards 0.1s; }
-.form-group:nth-child(2) { animation: slideInForm 0.5s ease forwards 0.2s; }
-.form-row { display: flex; gap: 15px; opacity: 0; animation: slideInForm 0.5s ease forwards 0.3s; }
+.form-group { margin-bottom: 20px; position: relative; }
+.form-group:nth-child(1) { animation: slideInForm 0.5s ease forwards 0.1s; opacity: 0; }
+.form-group:nth-child(2) { animation: slideInForm 0.5s ease forwards 0.2s; opacity: 0; }
+.form-row { display: flex; gap: 15px; animation: slideInForm 0.5s ease forwards 0.3s; opacity: 0; }
 .form-row .form-group { flex: 1; opacity: 1; animation: none; }
 
 @keyframes slideInForm { from { opacity: 0; transform: translateX(-15px); } to { opacity: 1; transform: translateX(0); } }
@@ -111,16 +111,20 @@ body {
 .form-group input::placeholder { color: rgba(255, 255, 255, 0.15); }
 .form-group input:focus { border-color: var(--gold); background: rgba(232, 195, 123, 0.05); box-shadow: 0 0 15px rgba(232, 195, 123, 0.15); }
 
-.btn { display: inline-flex; align-items: center; justify-content: center; padding: 15px 24px; font-size: 14px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #1a1c3b; background: linear-gradient(135deg, #fdfbf7, var(--gold)); border: none; border-radius: 12px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 15px rgba(232, 195, 123, 0.3); margin-top: 10px; font-family: inherit; width: 100%; opacity: 0; animation: slideInForm 0.5s ease forwards 0.4s; }
+.btn { display: inline-flex; align-items: center; justify-content: center; padding: 15px 24px; font-size: 14px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #1a1c3b; background: linear-gradient(135deg, #fdfbf7, var(--gold)); border: none; border-radius: 12px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 15px rgba(232, 195, 123, 0.3); margin-top: 10px; font-family: inherit; width: 100%; }
 .btn:hover:not(:disabled) { transform: translateY(-2px); background: linear-gradient(135deg, #fff, #f0d190); box-shadow: 0 8px 25px rgba(232, 195, 123, 0.6); }
 .btn.ghost { background: rgba(255, 255, 255, 0.03); color: var(--gold); border: 1px solid rgba(232, 195, 123, 0.3); box-shadow: none; }
+#registerForm .btn { animation: slideInForm 0.5s ease forwards 0.4s; opacity: 0; }
 
 /* КАЛЕНДАРЬ */
 .calendar-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
 @media (max-width: 780px) { .calendar-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; } }
 @media (max-width: 480px) { .calendar-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; } }
 
-.day-card { aspect-ratio: 1; position: relative; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); transition: transform 0.2s ease, box-shadow 0.2s ease; opacity: 0; animation: popCard 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+.day-card { 
+    aspect-ratio: 1; position: relative; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); transition: transform 0.2s ease, box-shadow 0.2s ease; 
+    opacity: 0; animation: popCard 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; 
+}
 @keyframes popCard { 0% { opacity: 0; transform: scale(0.8) translateY(20px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
 
 .day-card::before { content: ''; position: absolute; inset: 0; border-radius: 16px; background: linear-gradient(140deg, rgba(255, 255, 255, 0.1) 0%, transparent 40%); pointer-events: none; }
@@ -146,7 +150,7 @@ body {
 .progress-bar { height: 100%; width: 0%; border-radius: 2px; background: var(--gold); box-shadow: 0 0 10px var(--gold-glow); transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 
 .question-counter { text-align: center; font-size: 11px; color: var(--text-dim); margin-bottom: 24px; font-weight: 500; }
-.question { font-size: 17px; line-height: 1.5; font-weight: 600; margin-bottom: 24px; color: #fff; opacity: 0; }
+.question { font-size: 17px; line-height: 1.5; font-weight: 600; margin-bottom: 24px; color: #fff; opacity: 0; animation: slideInForm 0.4s ease forwards; }
 
 .options { display: flex; flex-direction: column; gap: 10px; }
 .option { display: flex; align-items: center; gap: 14px; padding: 16px 18px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; cursor: pointer; transition: all 0.2s ease; font-size: 14px; font-weight: 500; opacity: 0; }
@@ -220,7 +224,7 @@ body {
 
 <div class="wrapper">
     <!-- ЭКРАН РЕГИСТРАЦИИ -->
-    <div id="screen-register" class="screen active">
+    <div id="screen-register" class="screen active anim-fade">
         <div class="glass-panel">
             <div class="header"><h1>Добро пожаловать</h1><div class="subtitle">Давайте познакомимся</div></div>
             <form id="registerForm" onsubmit="handleRegister(event)">
@@ -400,17 +404,14 @@ function onDayClick(day, status) {
 }
 
 function showScreen(name) {
-    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.screen').forEach(s => {
+        s.classList.remove('active');
+        s.classList.remove('anim-fade');
+    });
     const screen = document.getElementById('screen-' + name);
     screen.classList.add('active');
-    
-    // Принудительно перезапускаем анимацию для экрана
-    const panel = screen.querySelector('.glass-panel');
-    if (panel) {
-        panel.classList.remove('anim-fade-in');
-        void panel.offsetWidth; // trigger reflow
-        panel.classList.add('anim-fade-in');
-    }
+    void screen.offsetWidth; 
+    screen.classList.add('anim-fade');
 }
 
 function backToCalendar() {
@@ -442,7 +443,6 @@ function loadQuestion() {
     
     const qEl = document.getElementById('questionText');
     qEl.textContent = q.question;
-    // Перезапуск анимации вопроса
     qEl.style.animation = 'none';
     qEl.offsetHeight; 
     qEl.style.animation = 'slideInForm 0.4s ease forwards';
@@ -485,30 +485,21 @@ function finishDayAndShowCurtains() {
     state.progress[currentDay] = { completed: true, score: score, total: questions.length, date: new Date().toISOString() };
     saveProgress();
     
-    // 1. Обновляем календарь ДО открытия шторок
     renderCalendar(); 
 
     const curtainLeft = document.getElementById('curtainLeft');
     const curtainRight = document.getElementById('curtainRight');
     const curtainText = document.getElementById('curtainText');
 
-    // 2. Задвигаем шторки
     curtainLeft.classList.add('open');
     curtainRight.classList.add('open');
 
-    // 3. Показываем текст
     setTimeout(() => { curtainText.classList.add('show'); }, 1000);
-
-    // 4. Прячем текст
     setTimeout(() => { curtainText.classList.remove('show'); }, 3200);
-
-    // 5. Открываем шторки обратно
     setTimeout(() => {
         curtainLeft.classList.remove('open');
         curtainRight.classList.remove('open');
     }, 4200);
-
-    // 6. Когда шторки уехали, переключаем на календарь
     setTimeout(() => {
         showScreen('calendar');
     }, 5400); 
@@ -566,7 +557,9 @@ function showToast(message) {
         }
         requestAnimationFrame(draw);
     }
-    window.addEventListener('resize', resize); init(); draw();
+    window.addEventListener('resize', resize); 
+    init(); 
+    draw();
 })();
 
 loadData();
