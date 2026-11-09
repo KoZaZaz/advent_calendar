@@ -36,7 +36,7 @@ body {
     overflow-x: hidden;
 }
 
-/* ============ ФОН ============ */
+/* ФОН */
 .bg-layer { position: fixed; inset: 0; z-index: -4; background: linear-gradient(to bottom, var(--bg-dark) 0%, var(--bg-light) 100%); }
 .street-lights { position: fixed; inset: 0; z-index: -3; overflow: hidden; pointer-events: none; }
 .light-orb { position: absolute; border-radius: 50%; background: var(--gold); filter: blur(15px); opacity: 0.4; animation: pulseLight 4s infinite alternate; }
@@ -49,7 +49,7 @@ body {
 
 #snowCanvas { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
 
-/* ============ ЛОГОТИП ============ */
+/* АНИМАЦИЯ ЛОГОТИПА */
 #screen-intro { position: fixed; inset: 0; display: flex; justify-content: center; align-items: center; z-index: 5000; background: var(--bg-dark); transition: opacity 1s ease, visibility 1s ease; }
 #screen-intro.hidden { opacity: 0; visibility: hidden; }
 .intro-logo-container { position: relative; display: flex; justify-content: center; align-items: center; animation: logoFadeAway 4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
@@ -57,28 +57,29 @@ body {
 .intro-logo-img { width: 220px; height: auto; image-rendering: -webkit-optimize-contrast; filter: drop-shadow(0 0 25px var(--gold-glow)); animation: pulseGlow 2.5s ease-in-out infinite alternate; }
 @keyframes pulseGlow { 0% { filter: drop-shadow(0 0 15px var(--gold-glow)); } 100% { filter: drop-shadow(0 0 35px var(--gold)); } }
 
-/* ============ СТЕКЛО ============ */
+/* СТЕКЛО */
 .wrapper { max-width: 980px; margin: 0 auto; position: relative; }
 .glass-panel { position: relative; max-width: 720px; margin: 0 auto; padding: 40px; background: var(--glass-bg); backdrop-filter: blur(25px) saturate(140%); -webkit-backdrop-filter: blur(25px) saturate(140%); border: 1px solid var(--glass-border); border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), inset 0 1px 0 var(--glass-highlight); }
 .glass-panel::before { content: ''; position: absolute; inset: 0; border-radius: 24px; background: linear-gradient(140deg, rgba(255,215,0,0.05) 0%, transparent 40%, transparent 60%, rgba(255,255,255,0.02) 100%); pointer-events: none; }
 @media (max-width: 600px) { .glass-panel { padding: 30px 20px; border-radius: 20px; } .intro-logo-img { width: 160px; } }
 
-/* ============ ЭКРАНЫ ============ */
+/* ЭКРАНЫ */
 .screen { display: none; }
 .screen.active { display: block; }
 .anim-screen { animation: fadeInScreen 0.5s ease-out forwards; }
 @keyframes fadeInScreen { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-/* ============ ФОРМА ============ */
+/* ФОРМА */
 .header { text-align: center; margin-bottom: 34px; padding: 10px; }
 .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; background: linear-gradient(to right, #fff, var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 .header .subtitle { font-size: 12px; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; font-weight: 500; }
 
-.form-group { margin-bottom: 20px; position: relative; opacity: 0; animation: slideInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-.form-group:nth-child(1) { animation-delay: 0.1s; }
-.form-group:nth-child(2) { animation-delay: 0.2s; }
+.form-group { margin-bottom: 20px; position: relative; opacity: 0; }
+.form-group:nth-child(1) { animation: slideInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.1s; }
+.form-group:nth-child(2) { animation: slideInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.2s; }
 .form-row { display: flex; gap: 15px; opacity: 0; animation: slideInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.3s; }
 .form-row .form-group { flex: 1; opacity: 1; animation: none; }
+
 @keyframes slideInRight { from { opacity: 0; transform: translateX(-15px); } to { opacity: 1; transform: translateX(0); } }
 
 .form-group label { display: block; font-size: 11px; color: var(--gold); margin-bottom: 8px; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
@@ -90,7 +91,7 @@ body {
 .btn:hover:not(:disabled) { transform: translateY(-2px); background: linear-gradient(135deg, #fff, #f0d190); box-shadow: 0 8px 25px rgba(232, 195, 123, 0.6); }
 .btn.ghost { background: rgba(255, 255, 255, 0.03); color: var(--gold); border: 1px solid rgba(232, 195, 123, 0.3); box-shadow: none; }
 
-/* ============ КАЛЕНДАРЬ ============ */
+/* КАЛЕНДАРЬ */
 .calendar-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
 @media (max-width: 780px) { .calendar-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; } }
 @media (max-width: 480px) { .calendar-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; } }
@@ -111,7 +112,7 @@ body {
 .day-card.completed::after { content: '✓'; position: absolute; top: 6px; right: 8px; color: var(--success); font-size: 12px; font-weight: 700; }
 .day-card.locked { cursor: not-allowed; opacity: 0.3; filter: grayscale(1); }
 
-/* ============ ТЕСТ ============ */
+/* ТЕСТ */
 .test-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; gap: 12px; }
 .back-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 215, 0, 0.15); color: var(--text-dim); padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
 .back-btn:hover { background: rgba(255, 255, 255, 0.1); color: var(--gold); }
@@ -137,20 +138,20 @@ body {
 .option.selected .marker { border-color: var(--gold); }
 .option.selected .marker::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 8px var(--gold); }
 
-/* ============ ШТОРКИ ============ */
+/* ШТОРКИ */
 .curtain { position: fixed; top: 0; bottom: 0; width: 50.5%; background: #070811; z-index: 4000; transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1); pointer-events: none; }
 .curtain.left { left: 0; transform: translateX(-100%); border-right: 1px solid rgba(232, 195, 123, 0.2); }
 .curtain.right { right: 0; transform: translateX(100%); }
 .curtain.open.left { transform: translateX(0); }
 .curtain.open.right { transform: translateX(0); }
 
-/* ============ ТЕКСТ ШТОРОК ============ */
+/* ТЕКСТ ШТОРОК */
 .curtain-text { position: fixed; inset: 0; z-index: 5000; display: flex; justify-content: center; align-items: center; pointer-events: none; }
 .curtain-text h2 { font-family: 'Playfair Display', serif; font-style: italic; font-size: 32px; color: var(--gold); text-align: center; text-shadow: 0 0 20px var(--gold-glow); padding: 0 20px; opacity: 0; transform: scale(0.8) translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
 .curtain-text.show h2 { opacity: 1; transform: scale(1) translateY(0); }
 @media (max-width: 600px) { .curtain-text h2 { font-size: 24px; } }
 
-/* ============ БЛОКИРОВКА И УВЕДОМЛЕНИЯ ============ */
+/* БЛОКИРОВКА И УВЕДОМЛЕНИЯ */
 .blocked-screen { text-align: center; }
 .blocked-screen .icon { font-size: 56px; margin-bottom: 14px; }
 .blocked-screen h2 { color: var(--error); font-size: 22px; margin-bottom: 12px; font-weight: 700; }
@@ -195,6 +196,7 @@ body {
 </div>
 
 <div class="wrapper">
+    <!-- ЭКРАН РЕГИСТРАЦИИ -->
     <div id="screen-register" class="screen active anim-screen">
         <div class="glass-panel">
             <div class="header"><h1>Добро пожаловать</h1><div class="subtitle">Давайте познакомимся</div></div>
@@ -210,6 +212,7 @@ body {
         </div>
     </div>
 
+    <!-- ЭКРАН КАЛЕНДАРЯ -->
     <div id="screen-calendar" class="screen">
         <div class="header">
             <h1>Адвент-календарь</h1>
@@ -219,6 +222,7 @@ body {
         <div class="calendar-grid" id="calendarGrid"></div>
     </div>
 
+    <!-- ЭКРАН ТЕСТА -->
     <div id="screen-test" class="screen">
         <div class="glass-panel">
             <div class="test-header">
@@ -233,6 +237,7 @@ body {
         </div>
     </div>
 
+    <!-- ЭКРАН БЛОКИРОВКИ -->
     <div id="screen-blocked" class="screen">
         <div class="glass-panel blocked-screen">
             <div class="icon">🚫</div>
