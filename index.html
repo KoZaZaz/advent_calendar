@@ -5,29 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Новогодний Адвент-календарь</title>
     
-    <!-- Подключаем шрифт Montserrat -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         :root {
-            /* ПРАЗДНИЧНАЯ НОЧНАЯ ПАЛИТРА */
-            --bg-dark: #0a0c1a; /* Глубокий ночной */
-            --bg-light: #1a1c3b; /* Фиолетово-синий */
+            --bg-dark: #0a0c1a;
+            --bg-light: #1a1c3b;
             --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 215, 0, 0.15); /* Золотистая рамка */
+            --glass-border: rgba(255, 215, 0, 0.15);
             --glass-highlight: rgba(255, 255, 255, 0.2);
             
-            --text-main: #fdfbf7; /* Теплый белый */
+            --text-main: #fdfbf7;
             --text-dim: #a0a5b8;
             
-            /* Благородное золото (Шампань) */
             --gold: #e8c37b; 
             --gold-glow: rgba(232, 195, 123, 0.4);
-            --gold-dark: #c9a35b;
             
             --success: #34d399;
             --error: #f87171;
@@ -51,7 +47,6 @@
             background: linear-gradient(to bottom, var(--bg-dark) 0%, var(--bg-light) 100%);
         }
 
-        /* Огни гирлянд на фоне (Боке) */
         .street-lights {
             position: fixed; inset: 0; z-index: -3;
             overflow: hidden; pointer-events: none;
@@ -66,7 +61,6 @@
             animation: pulseLight 4s infinite alternate;
         }
 
-        /* Разбрасываем огни */
         .light-orb:nth-child(1) { top: 15%; left: 10%; width: 60px; height: 60px; animation-delay: 0s; }
         .light-orb:nth-child(2) { top: 25%; left: 85%; width: 80px; height: 80px; animation-delay: 1s; background: #a855f7; opacity: 0.3;}
         .light-orb:nth-child(3) { top: 70%; left: 20%; width: 50px; height: 50px; animation-delay: 2s; background: #38bdf8; opacity: 0.3;}
@@ -103,11 +97,9 @@
 
         .intro-logo {
             width: 240px; height: auto;
-            /* Золотое свечение */
             filter: drop-shadow(0 0 25px var(--gold-glow));
         }
 
-        /* Анимация пульсации для цифр */
         .logo-numbers {
             animation: pulseNumbers 2.5s ease-in-out infinite alternate;
         }
@@ -155,7 +147,6 @@
             background: linear-gradient(to right, #fff, var(--gold));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 2px 10px rgba(232, 195, 123, 0.2);
         }
         .header .subtitle {
             font-size: 12px; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; font-weight: 500;
@@ -185,7 +176,7 @@
         .btn {
             display: inline-flex; align-items: center; justify-content: center;
             padding: 15px 24px; font-size: 14px; font-weight: 700; letter-spacing: 1px;
-            text-transform: uppercase; color: #1a1c3b; /* Темный текст на золоте */
+            text-transform: uppercase; color: #1a1c3b; 
             background: linear-gradient(135deg, #fdfbf7, var(--gold)); 
             border: none; border-radius: 12px; cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -236,7 +227,6 @@
             color: var(--text-dim); margin-top: 2px; font-weight: 500;
         }
 
-        /* Активное окно (Золотое) */
         .day-card.available {
             background: rgba(232, 195, 123, 0.1);
             border-color: rgba(232, 195, 123, 0.4);
@@ -249,7 +239,6 @@
         }
         .day-card:hover .day-number, .day-card.available .day-number { color: var(--gold); }
 
-        /* Пройдено */
         .day-card.completed {
             background: rgba(52, 211, 153, 0.08);
             border-color: rgba(52, 211, 153, 0.3);
@@ -260,12 +249,11 @@
             color: var(--success); font-size: 12px; font-weight: 700;
         }
 
-        /* Заблокировано */
         .day-card.locked {
             cursor: not-allowed; opacity: 0.3; filter: grayscale(1);
         }
 
-        /* ============ ТЕСТ ============ */
+        /* ============ ТЕСТ (БЕЗ ПОДСВЕТКИ ОТВЕТОВ) ============ */
         .test-header {
             display: flex; align-items: center; justify-content: space-between;
             margin-bottom: 20px; gap: 12px;
@@ -310,6 +298,7 @@
             width: 18px; height: 18px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.2);
             flex-shrink: 0; position: relative; transition: all 0.2s ease;
         }
+        /* Убрали классы .correct и .wrong, оставили только выделение выбора */
         .option.selected {
             background: rgba(232, 195, 123, 0.15); border-color: var(--gold);
         }
@@ -318,24 +307,44 @@
             content: ''; position: absolute; inset: 3px; border-radius: 50%;
             background: var(--gold); box-shadow: 0 0 8px var(--gold);
         }
-        .option.correct {
-            background: rgba(52, 211, 153, 0.1); border-color: var(--success);
-        }
-        .option.correct .marker { border-color: var(--success); background: var(--success); }
-        .option.wrong {
-            background: rgba(248, 113, 113, 0.1); border-color: var(--error);
-        }
-        .option.wrong .marker { border-color: var(--error); background: var(--error); }
 
-        /* ============ РЕЗУЛЬТАТ И БЛОКИРОВКА ============ */
-        .result { text-align: center; }
-        .result h2 { font-size: 22px; margin-bottom: 12px; font-weight: 700; color: var(--gold); }
-        .score {
-            font-size: 56px; font-weight: 700; margin: 20px 0 8px; color: var(--gold);
-            text-shadow: 0 0 30px var(--gold-glow);
+        /* ============ АНИМАЦИЯ ЗАКРЫТИЯ (ШТОРКИ) ============ */
+        .curtain {
+            position: fixed;
+            top: 0; bottom: 0;
+            width: 50%;
+            background: #070811;
+            z-index: 4000;
+            transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+            pointer-events: none;
         }
-        .result-text { font-size: 15px; color: var(--text-dim); margin-bottom: 28px; }
+        .curtain.left { left: 0; transform: translateX(-100%); border-right: 1px solid rgba(232, 195, 123, 0.2); }
+        .curtain.right { right: 0; transform: translateX(100%); }
         
+        .curtain.open.left { transform: translateX(0); }
+        .curtain.open.right { transform: translateX(0); }
+
+        .curtain-text {
+            position: fixed; inset: 0; z-index: 5000;
+            display: flex; justify-content: center; align-items: center;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.8s ease 0.8s;
+        }
+        .curtain-text.show { opacity: 1; }
+
+        .curtain-text h2 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 32px;
+            color: var(--gold);
+            text-align: center;
+            text-shadow: 0 0 20px var(--gold-glow);
+            padding: 0 20px;
+        }
+        @media (max-width: 600px) { .curtain-text h2 { font-size: 24px; } }
+
+        /* ============ БЛОКИРОВКА ============ */
         .blocked-screen { text-align: center; }
         .blocked-screen .icon { font-size: 56px; margin-bottom: 14px; }
         .blocked-screen h2 { color: var(--error); font-size: 22px; margin-bottom: 12px; font-weight: 700; }
@@ -378,47 +387,40 @@
 </head>
 <body>
 
-    <!-- ЭКРАН ИНТРО С ЛОГОТИПОМ (Идеальная геометрия) -->
+    <!-- ШТОРКИ (Изначально скрыты) -->
+    <div class="curtain left" id="curtainLeft"></div>
+    <div class="curtain right" id="curtainRight"></div>
+    <div class="curtain-text" id="curtainText">
+        <h2>До завтрашнего дня...</h2>
+    </div>
+
+    <!-- ЭКРАН ИНТРО С ИДЕАЛЬНЫМ ЛОГОТИПОМ -->
     <div id="screen-intro">
         <div class="intro-logo-container">
             <svg class="intro-logo" viewBox="0 0 400 320" xmlns="http://www.w3.org/2000/svg">
-                <!-- Левая страница книги -->
                 <path d="M 40 40 C 120 40, 180 80, 200 110 L 200 280 C 180 250, 120 210, 40 210 Z" fill="#00478f"/>
-                <!-- Правая страница книги -->
                 <path d="M 360 40 C 280 40, 220 80, 200 110 L 200 280 C 220 250, 280 210, 360 210 Z" fill="#0073c8"/>
-                
-                <!-- Круг и линия внизу -->
                 <circle cx="200" cy="200" r="26" fill="#ffffff"/>
                 <rect x="193" y="200" width="14" height="65" fill="#ffffff"/>
-
-                <!-- Цифра 4 -->
                 <g class="logo-numbers">
                     <path d="M 110 100 L 60 190 L 110 190 L 110 220 L 140 220 L 140 190 L 130 190 L 130 170 L 110 170 L 110 100 Z" fill="#ffffff"/>
                 </g>
-                
-                <!-- Цифра 9 -->
                 <g class="logo-numbers">
-                    <path d="M 270 120 C 270 90, 320 90, 320 120 C 320 150, 270 170, 270 210 L 295 210 C 295 180, 345 150, 345 120 C 345 70, 245 70, 245 120 Z" fill="#ffffff"/>
+                    <path d="M 260 120 A 35 35 0 1 1 330 120 A 35 35 0 1 1 260 120 Z" fill="#ffffff"/>
+                    <rect x="295" y="120" width="35" height="90" fill="#ffffff"/>
                 </g>
             </svg>
         </div>
     </div>
 
-    <!-- Фон: Улица с огнями -->
     <div class="bg-layer"></div>
     <div class="street-lights">
-        <div class="light-orb"></div>
-        <div class="light-orb"></div>
-        <div class="light-orb"></div>
-        <div class="light-orb"></div>
-        <div class="light-orb"></div>
+        <div class="light-orb"></div><div class="light-orb"></div><div class="light-orb"></div><div class="light-orb"></div><div class="light-orb"></div>
     </div>
     <canvas id="snowCanvas"></canvas>
 
-    <!-- Уведомления -->
     <div class="toast" id="toast"></div>
 
-    <!-- Оверлей (Антисписывание) -->
     <div class="overlay" id="overlay">
         <div class="overlay-content">
             <h2>⚠️ Обнаружен уход со страницы</h2>
@@ -427,43 +429,26 @@
     </div>
 
     <div class="wrapper">
-
-        <!-- ============ ЭКРАН РЕГИСТРАЦИИ ============ -->
+        <!-- ЭКРАН РЕГИСТРАЦИИ -->
         <div id="screen-register" class="screen">
             <div class="glass-panel">
                 <div class="header">
                     <h1>Добро пожаловать</h1>
                     <div class="subtitle">Давайте познакомимся</div>
                 </div>
-                
                 <form id="registerForm" onsubmit="handleRegister(event)">
-                    <div class="form-group">
-                        <label>Имя</label>
-                        <input type="text" id="regName" placeholder="Например: Иван" required autocomplete="off">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Фамилия</label>
-                        <input type="text" id="regSurname" placeholder="Например: Иванов" required autocomplete="off">
-                    </div>
-                    
+                    <div class="form-group"><label>Имя</label><input type="text" id="regName" placeholder="Например: Иван" required autocomplete="off"></div>
+                    <div class="form-group"><label>Фамилия</label><input type="text" id="regSurname" placeholder="Например: Иванов" required autocomplete="off"></div>
                     <div class="form-row">
-                        <div class="form-group">
-                            <label>Класс</label>
-                            <input type="number" id="regClass" placeholder="10" min="1" max="11" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Литер</label>
-                            <input type="text" id="regLetter" placeholder="А" maxlength="2" required style="text-transform: uppercase;">
-                        </div>
+                        <div class="form-group"><label>Класс</label><input type="number" id="regClass" placeholder="10" min="1" max="11" required></div>
+                        <div class="form-group"><label>Литер</label><input type="text" id="regLetter" placeholder="А" maxlength="2" required style="text-transform: uppercase;"></div>
                     </div>
-
                     <button type="submit" class="btn full">Войти</button>
                 </form>
             </div>
         </div>
 
-        <!-- ============ ЭКРАН КАЛЕНДАРЯ ============ -->
+        <!-- ЭКРАН КАЛЕНДАРЯ -->
         <div id="screen-calendar" class="screen">
             <div class="header">
                 <h1>Адвент-календарь</h1>
@@ -473,7 +458,7 @@
             <div class="calendar-grid" id="calendarGrid"></div>
         </div>
 
-        <!-- ============ ЭКРАН ТЕСТА ============ -->
+        <!-- ЭКРАН ТЕСТА -->
         <div id="screen-test" class="screen">
             <div class="glass-panel">
                 <div class="test-header">
@@ -481,9 +466,7 @@
                     <div class="day-badge" id="testDayBadge">День 1</div>
                     <div style="width: 74px;"></div>
                 </div>
-                <div class="progress">
-                    <div class="progress-bar" id="progressBar"></div>
-                </div>
+                <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
                 <div class="question-counter" id="questionCounter"></div>
                 <div class="question" id="questionText"></div>
                 <div class="options" id="options"></div>
@@ -491,35 +474,23 @@
             </div>
         </div>
 
-        <!-- ============ ЭКРАН РЕЗУЛЬТАТА ============ -->
-        <div id="screen-result" class="screen">
-            <div class="glass-panel result">
-                <h2>День пройден</h2>
-                <div class="score" id="score"></div>
-                <div class="result-text" id="resultText"></div>
-                <button class="btn ghost" onclick="backToCalendar()">← К календарю</button>
-            </div>
-        </div>
-
-        <!-- ============ ЭКРАН БЛОКИРОВКИ ============ -->
+        <!-- ЭКРАН БЛОКИРОВКИ -->
         <div id="screen-blocked" class="screen">
             <div class="glass-panel blocked-screen">
                 <div class="icon">🚫</div>
                 <h2>Тест заблокирован</h2>
                 <p>Вы покинули страницу во время прохождения теста.</p>
-                <p>Попытка считается недействительной.</p>
                 <div class="warning" id="blockedReason"></div>
                 <button class="btn ghost full" onclick="backToCalendar()" style="margin-top: 20px;">← К календарю</button>
             </div>
         </div>
-
     </div>
 
     <script>
         /* ============================================================
            ⚙️ НАСТРОЙКИ
            ============================================================ */
-        const TEST_MODE = true; // true = все дни открыты для теста.
+        const TEST_MODE = true; // Включен режим тестирования (все дни доступны)
         const YEAR = new Date().getFullYear();
         const TOTAL_DAYS = 24;
         
@@ -573,21 +544,17 @@
             try {
                 const rawProg = localStorage.getItem(STORAGE_KEY_PROGRESS);
                 if (rawProg) state.progress = JSON.parse(rawProg);
-                
                 const rawUser = localStorage.getItem(STORAGE_KEY_USER);
                 if (rawUser) currentUser = JSON.parse(rawUser);
             } catch (e) {}
         }
 
         function saveProgress() {
-            try {
-                localStorage.setItem(STORAGE_KEY_PROGRESS, JSON.stringify(state.progress));
-            } catch (e) {}
+            try { localStorage.setItem(STORAGE_KEY_PROGRESS, JSON.stringify(state.progress)); } catch (e) {}
         }
 
         function handleRegister(event) {
             event.preventDefault();
-            
             const name = document.getElementById('regName').value.trim();
             const surname = document.getElementById('regSurname').value.trim();
             const cls = document.getElementById('regClass').value.trim();
@@ -599,10 +566,7 @@
             }
 
             currentUser = { name, surname, class: cls, letter };
-            
-            try {
-                localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser));
-            } catch (e) {}
+            try { localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(currentUser)); } catch (e) {}
 
             startCalendar();
         }
@@ -612,7 +576,6 @@
            ============================================================ */
         function getTodayDayNumber() {
             if (TEST_MODE) return 1; 
-
             const now = new Date();
             if (now.getMonth() !== 11) return null;
             if (now.getFullYear() !== YEAR) return null;
@@ -643,7 +606,6 @@
         function renderCalendar() {
             const grid = document.getElementById('calendarGrid');
             grid.innerHTML = '';
-
             const todayInfo = document.getElementById('todayInfo');
             
             if (TEST_MODE) {
@@ -655,7 +617,6 @@
                 todayInfo.style.color = 'var(--gold)';
                 todayInfo.style.background = 'rgba(232, 195, 123, 0.1)';
                 todayInfo.style.border = '1px solid rgba(232, 195, 123, 0.3)';
-                
                 const today = getTodayDayNumber();
                 if (today !== null) {
                     todayInfo.textContent = `Сегодня ${today} декабря · доступно задание дня ${today}`;
@@ -674,11 +635,7 @@
                 else if (status === 'available') labelText = 'Открыть';
                 else if (status === 'missed') labelText = 'Пропущено';
 
-                card.innerHTML = `
-                    <div class="day-number">${day}</div>
-                    <div class="day-label">${labelText}</div>
-                `;
-
+                card.innerHTML = `<div class="day-number">${day}</div><div class="day-label">${labelText}</div>`;
                 card.addEventListener('click', () => onDayClick(day, status));
                 grid.appendChild(card);
             }
@@ -702,9 +659,7 @@
         }
 
         function backToCalendar() {
-            if (testActive && !confirm('Выйти из теста? Прогресс текущего дня будет потерян.')) {
-                return;
-            }
+            if (testActive && !confirm('Выйти из теста? Прогресс текущего дня будет потерян.')) return;
             testActive = false;
             showScreen('calendar');
             renderCalendar();
@@ -762,35 +717,33 @@
             document.getElementById('nextBtn').disabled = false;
         }
 
+        // ВАЖНО: Мы больше не подсвечиваем правильные/неправильные ответы!
         document.getElementById('nextBtn').onclick = () => {
             if (!answered) {
                 answered = true;
                 const q = questions[currentQuestion];
-                const options = document.querySelectorAll('.option');
-
-                options.forEach((el, i) => {
-                    if (i === q.correct) el.classList.add('correct');
-                    else if (i === selectedAnswer) el.classList.add('wrong');
-                });
-
-                if (selectedAnswer === q.correct) score++;
-
+                if (selectedAnswer === q.correct) score++; // Считаем баллы "в тихую"
+                
                 const btn = document.getElementById('nextBtn');
-                btn.textContent = currentQuestion < questions.length - 1 ? 'Следующий вопрос' : 'Показать результат';
+                btn.textContent = currentQuestion < questions.length - 1 ? 'Следующий вопрос' : 'Завершить';
             } else {
                 currentQuestion++;
                 if (currentQuestion < questions.length) {
                     loadQuestion();
                 } else {
-                    finishDay();
+                    finishDayAndShowCurtains();
                 }
             }
         };
 
-        function finishDay() {
+        /* ============================================================
+           ЗАВЕРШЕНИЕ ДНЯ И АНИМАЦИЯ ШТОРОК
+           ============================================================ */
+        function finishDayAndShowCurtains() {
             testActive = false;
             const total = questions.length;
 
+            // Сохраняем прогресс (баллы сохраняются для админа/статистики)
             state.progress[currentDay] = {
                 completed: true,
                 score: score,
@@ -799,18 +752,32 @@
             };
             saveProgress();
 
-            const percentage = Math.round((score / total) * 100);
-            document.getElementById('score').textContent = `${score} / ${total}`;
+            // Запускаем анимацию шторок
+            const curtainLeft = document.getElementById('curtainLeft');
+            const curtainRight = document.getElementById('curtainRight');
+            const curtainText = document.getElementById('curtainText');
 
-            let text = '';
-            if (percentage === 100) text = '🏆 Идеально! Вы справились на все 100%.';
-            else if (percentage >= 80) text = '🎉 Отлично! Очень хороший результат.';
-            else if (percentage >= 60) text = '👍 Неплохо! Но можно и лучше.';
-            else if (percentage >= 40) text = '📚 Стоит повторить материал.';
-            else text = '💪 Не сдавайтесь! Попробуйте в следующем дне.';
+            // Выезжают из углов
+            curtainLeft.classList.add('open');
+            curtainRight.classList.add('open');
 
-            document.getElementById('resultText').textContent = `${text} (${percentage}%)`;
-            showScreen('result');
+            // Показываем текст с задержкой (когда шторки сойдутся)
+            setTimeout(() => {
+                curtainText.classList.add('show');
+            }, 1000);
+
+            // Через 3 секунды после появления текста возвращаем в календарь
+            setTimeout(() => {
+                curtainText.classList.remove('show');
+                curtainLeft.classList.remove('open');
+                curtainRight.classList.remove('open');
+                
+                // Возвращаем интерфейс в исходное состояние
+                setTimeout(() => {
+                    showScreen('calendar');
+                    renderCalendar();
+                }, 1000); // Ждем, пока шторки уедут обратно
+            }, 3500);
         }
 
         /* ============================================================
@@ -825,23 +792,21 @@
         });
 
         document.addEventListener('visibilitychange', () => {
-            if (document.hidden && testActive) registerViolation('Вы переключились на другую вкладку или свернули окно');
+            if (document.hidden && testActive) registerViolation('Вы переключились на другую вкладку');
         });
 
         window.addEventListener('blur', () => {
             if (testActive) registerViolation('Окно теста потеряло фокус');
         });
 
-        document.addEventListener('contextmenu', (e) => {
-            if (testActive) e.preventDefault();
-        });
+        document.addEventListener('contextmenu', (e) => { if (testActive) e.preventDefault(); });
+        document.addEventListener('copy', (e) => { if (testActive) e.preventDefault(); });
 
         document.addEventListener('keydown', (e) => {
             if (!testActive) return;
             const key = e.key.toLowerCase();
             const ctrl = e.ctrlKey || e.metaKey;
             const shift = e.shiftKey;
-
             if (e.key === 'F12' || (ctrl && shift && (key === 'i' || key === 'j' || key === 'c')) || (ctrl && key === 'u')) {
                 e.preventDefault();
                 registerViolation('Попытка открыть инструменты разработчика');
@@ -851,14 +816,10 @@
             }
         });
 
-        document.addEventListener('copy', (e) => {
-            if (testActive) e.preventDefault();
-        });
-
         function registerViolation(reason) {
             violations++;
             if (violations >= 2) {
-                blockTest(`Зафиксировано нарушений: ${violations}. Причина: ${reason}`);
+                blockTest(`Нарушений: ${violations}. Причина: ${reason}`);
             } else {
                 showOverlayWarning(reason);
             }
@@ -876,17 +837,12 @@
         function blockTest(reason) {
             testActive = false;
             document.getElementById('overlay').classList.remove('show');
-
-            document.getElementById('blockedReason').innerHTML = `
-                <strong>Причина:</strong> ${reason}<br>
-                <strong>Всего нарушений:</strong> ${violations}<br>
-                <strong>Время попытки:</strong> ${Math.round((Date.now() - startTime) / 1000)} сек.
-            `;
+            document.getElementById('blockedReason').innerHTML = `<strong>Причина:</strong> ${reason}`;
             showScreen('blocked');
         }
 
         /* ============================================================
-           УТИЛИТЫ
+           УТИЛИТЫ И ЭФФЕКТЫ
            ============================================================ */
         let toastTimer = null;
         function showToast(message) {
@@ -897,78 +853,48 @@
             toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
-        /* ============================================================
-           ЭФФЕКТЫ: КРУПНЫЙ СНЕГ
-           ============================================================ */
         (function initSnow() {
             const canvas = document.getElementById('snowCanvas');
             const ctx = canvas.getContext('2d');
             let width, height, flakes = [];
             const FLAKE_COUNT = Math.min(80, Math.floor(window.innerWidth / 15));
 
-            function resize() {
-                width = canvas.width = window.innerWidth;
-                height = canvas.height = window.innerHeight;
-            }
+            function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
 
             function createFlake(randomY = false) {
                 return {
-                    x: Math.random() * width,
-                    y: randomY ? Math.random() * height : -10,
-                    r: Math.random() * 2.5 + 1, // Чуть крупнее
-                    speedY: Math.random() * 0.8 + 0.3,
-                    speedX: Math.random() * 0.6 - 0.3,
-                    opacity: Math.random() * 0.5 + 0.4,
-                    sway: Math.random() * Math.PI * 2,
-                    swaySpeed: Math.random() * 0.02 + 0.005
+                    x: Math.random() * width, y: randomY ? Math.random() * height : -10,
+                    r: Math.random() * 2.5 + 1, speedY: Math.random() * 0.8 + 0.3,
+                    speedX: Math.random() * 0.6 - 0.3, opacity: Math.random() * 0.5 + 0.4,
+                    sway: Math.random() * Math.PI * 2, swaySpeed: Math.random() * 0.02 + 0.005
                 };
             }
 
-            function init() {
-                resize();
-                flakes = [];
-                for (let i = 0; i < FLAKE_COUNT; i++) flakes.push(createFlake(true));
-            }
+            function init() { resize(); flakes = []; for (let i = 0; i < FLAKE_COUNT; i++) flakes.push(createFlake(true)); }
 
             function draw() {
                 ctx.clearRect(0, 0, width, height);
                 for (const f of flakes) {
-                    f.sway += f.swaySpeed;
-                    f.x += Math.sin(f.sway) * 0.3 + f.speedX;
-                    f.y += f.speedY;
+                    f.sway += f.swaySpeed; f.x += Math.sin(f.sway) * 0.3 + f.speedX; f.y += f.speedY;
                     if (f.y > height + 5) { f.y = -5; f.x = Math.random() * width; }
                     if (f.x > width + 5) f.x = -5;
                     if (f.x < -5) f.x = width + 5;
-
-                    ctx.beginPath();
-                    ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+                    ctx.beginPath(); ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
                     ctx.fillStyle = `rgba(255, 255, 255, ${f.opacity})`;
-                    ctx.shadowBlur = 6;
-                    ctx.shadowColor = 'rgba(255, 255, 255, 0.8)';
+                    ctx.shadowBlur = 6; ctx.shadowColor = 'rgba(255, 255, 255, 0.8)';
                     ctx.fill();
                 }
                 requestAnimationFrame(draw);
             }
-
-            window.addEventListener('resize', resize);
-            init();
-            draw();
+            window.addEventListener('resize', resize); init(); draw();
         })();
 
-        /* ============================================================
-           ИНИЦИАЛИЗАЦИЯ И ИНТРО
-           ============================================================ */
         loadData();
-
         setTimeout(() => {
             document.getElementById('screen-intro').classList.add('hidden');
-            
-            if (currentUser) {
-                startCalendar();
-            } else {
-                showScreen('register');
-            }
-        }, 4000); // 4 секунды на логотип
+            if (currentUser) startCalendar();
+            else showScreen('register');
+        }, 4000);
     </script>
 </body>
 </html>
