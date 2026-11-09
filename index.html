@@ -49,13 +49,14 @@ body {
 
 #snowCanvas { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
 
-/* АНИМАЦИЯ ЛОГОТИПА */
+/* ИНТРО (ЛОГОТИП) */
 #screen-intro { position: fixed; inset: 0; display: flex; justify-content: center; align-items: center; z-index: 5000; background: var(--bg-dark); transition: opacity 1s ease, visibility 1s ease; }
 #screen-intro.hidden { opacity: 0; visibility: hidden; }
-.intro-logo-container { position: relative; display: flex; justify-content: center; align-items: center; animation: logoFadeAway 4s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-@keyframes logoFadeAway { 0% { transform: scale(0.9) translateY(20px); filter: blur(5px); opacity: 0; } 20% { transform: scale(1) translateY(0); filter: blur(0); opacity: 1; } 80% { transform: scale(1) translateY(0); filter: blur(0); opacity: 1; } 100% { transform: scale(1.1) translateY(-20px); filter: blur(10px); opacity: 0; } }
-.intro-logo-img { width: 220px; height: auto; image-rendering: -webkit-optimize-contrast; filter: drop-shadow(0 0 25px var(--gold-glow)); animation: pulseGlow 2.5s ease-in-out infinite alternate; }
-@keyframes pulseGlow { 0% { filter: drop-shadow(0 0 15px var(--gold-glow)); } 100% { filter: drop-shadow(0 0 35px var(--gold)); } }
+
+/* Убираем CSS-анимации, которые глючат в браузере. Всё делает JS */
+.intro-logo-container { position: relative; display: flex; justify-content: center; align-items: center; opacity: 0; transform: scale(0.9) translateY(20px); transition: all 1s ease-out; }
+.intro-logo-container.visible { opacity: 1; transform: scale(1) translateY(0); }
+.intro-logo-img { width: 220px; height: auto; filter: drop-shadow(0 0 25px var(--gold-glow)); transition: transform 0.5s ease; }
 
 /* СТЕКЛО */
 .wrapper { max-width: 980px; margin: 0 auto; position: relative; }
@@ -66,28 +67,29 @@ body {
 /* ЭКРАНЫ */
 .screen { display: none; }
 .screen.active { display: block; }
-.anim-screen { animation: fadeInScreen 0.5s ease-out forwards; }
-@keyframes fadeInScreen { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.anim-screen { opacity: 0; transform: translateY(15px); transition: opacity 0.5s ease, transform 0.5s ease; }
+.anim-screen.visible { opacity: 1; transform: translateY(0); }
 
 /* ФОРМА */
 .header { text-align: center; margin-bottom: 34px; padding: 10px; }
 .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; background: linear-gradient(to right, #fff, var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 .header .subtitle { font-size: 12px; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; font-weight: 500; }
 
-.form-group { margin-bottom: 20px; position: relative; opacity: 0; }
-.form-group:nth-child(1) { animation: slideInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.1s; }
-.form-group:nth-child(2) { animation: slideInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.2s; }
-.form-row { display: flex; gap: 15px; opacity: 0; animation: slideInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.3s; }
-.form-row .form-group { flex: 1; opacity: 1; animation: none; }
+.form-group { margin-bottom: 20px; position: relative; opacity: 0; transform: translateX(-15px); transition: opacity 0.4s ease, transform 0.4s ease; }
+.form-group:nth-child(1) { transition-delay: 0.1s; }
+.form-group:nth-child(2) { transition-delay: 0.2s; }
+.form-row { display: flex; gap: 15px; opacity: 0; transform: translateX(-15px); transition: opacity 0.4s ease, transform 0.4s ease; transition-delay: 0.3s; }
+.form-row .form-group { flex: 1; opacity: 1; transform: none; transition: none; }
 
-@keyframes slideInRight { from { opacity: 0; transform: translateX(-15px); } to { opacity: 1; transform: translateX(0); } }
+.form-group.visible, .form-row.visible { opacity: 1; transform: translateX(0); }
 
 .form-group label { display: block; font-size: 11px; color: var(--gold); margin-bottom: 8px; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
 .form-group input { width: 100%; padding: 15px 18px; background: rgba(0, 0, 0, 0.3); border: 1px solid rgba(255, 215, 0, 0.2); border-radius: 12px; color: var(--text-main); font-size: 15px; font-family: inherit; outline: none; transition: all 0.3s ease; }
 .form-group input::placeholder { color: rgba(255, 255, 255, 0.15); }
 .form-group input:focus { border-color: var(--gold); background: rgba(232, 195, 123, 0.05); box-shadow: 0 0 15px rgba(232, 195, 123, 0.15); }
 
-.btn { display: inline-flex; align-items: center; justify-content: center; padding: 15px 24px; font-size: 14px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #1a1c3b; background: linear-gradient(135deg, #fdfbf7, var(--gold)); border: none; border-radius: 12px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 15px rgba(232, 195, 123, 0.3); margin-top: 10px; font-family: inherit; width: 100%; opacity: 0; animation: slideInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards 0.4s; }
+.btn { display: inline-flex; align-items: center; justify-content: center; padding: 15px 24px; font-size: 14px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #1a1c3b; background: linear-gradient(135deg, #fdfbf7, var(--gold)); border: none; border-radius: 12px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 15px rgba(232, 195, 123, 0.3); margin-top: 10px; font-family: inherit; width: 100%; opacity: 0; transform: translateX(-15px); transition: opacity 0.4s ease, transform 0.4s ease; transition-delay: 0.4s; }
+.btn.visible { opacity: 1; transform: translateX(0); }
 .btn:hover:not(:disabled) { transform: translateY(-2px); background: linear-gradient(135deg, #fff, #f0d190); box-shadow: 0 8px 25px rgba(232, 195, 123, 0.6); }
 .btn.ghost { background: rgba(255, 255, 255, 0.03); color: var(--gold); border: 1px solid rgba(232, 195, 123, 0.3); box-shadow: none; }
 
@@ -96,8 +98,8 @@ body {
 @media (max-width: 780px) { .calendar-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; } }
 @media (max-width: 480px) { .calendar-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; } }
 
-.day-card { aspect-ratio: 1; position: relative; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); opacity: 0; animation: popInCard 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
-@keyframes popInCard { 0% { opacity: 0; transform: scale(0.8) translateY(15px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
+.day-card { aspect-ratio: 1; position: relative; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); opacity: 0; transform: scale(0.8) translateY(15px); transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.day-card.visible { opacity: 1; transform: scale(1) translateY(0); }
 
 .day-card::before { content: ''; position: absolute; inset: 0; border-radius: 16px; background: linear-gradient(140deg, rgba(255, 255, 255, 0.1) 0%, transparent 40%); pointer-events: none; }
 .day-number { font-size: 22px; font-weight: 700; line-height: 1; color: #fff; transition: all 0.3s ease; }
@@ -122,15 +124,17 @@ body {
 .progress-bar { height: 100%; width: 0%; border-radius: 2px; background: var(--gold); box-shadow: 0 0 10px var(--gold-glow); transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 
 .question-counter { text-align: center; font-size: 11px; color: var(--text-dim); margin-bottom: 24px; font-weight: 500; }
-.question { font-size: 17px; line-height: 1.5; font-weight: 600; margin-bottom: 24px; color: #fff; opacity: 0; animation: fadeInScreen 0.4s ease-out forwards; }
+
+.question { font-size: 17px; line-height: 1.5; font-weight: 600; margin-bottom: 24px; color: #fff; opacity: 0; transform: translateY(10px); transition: opacity 0.4s ease, transform 0.4s ease; }
+.question.visible { opacity: 1; transform: translateY(0); }
 
 .options { display: flex; flex-direction: column; gap: 10px; }
-.option { display: flex; align-items: center; gap: 14px; padding: 16px 18px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; cursor: pointer; transition: all 0.2s ease; font-size: 14px; font-weight: 500; opacity: 0; }
-.option:nth-child(1) { animation: popInOption 0.4s ease-out forwards 0.1s; }
-.option:nth-child(2) { animation: popInOption 0.4s ease-out forwards 0.15s; }
-.option:nth-child(3) { animation: popInOption 0.4s ease-out forwards 0.2s; }
-.option:nth-child(4) { animation: popInOption 0.4s ease-out forwards 0.25s; }
-@keyframes popInOption { 0% { opacity: 0; transform: translateX(-10px); } 100% { opacity: 1; transform: translateX(0); } }
+.option { display: flex; align-items: center; gap: 14px; padding: 16px 18px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; cursor: pointer; transition: all 0.2s ease; font-size: 14px; font-weight: 500; opacity: 0; transform: translateX(-15px); transition: opacity 0.4s ease, transform 0.4s ease; }
+.option.visible { opacity: 1; transform: translateX(0); }
+.option:nth-child(1) { transition-delay: 0.1s; }
+.option:nth-child(2) { transition-delay: 0.15s; }
+.option:nth-child(3) { transition-delay: 0.2s; }
+.option:nth-child(4) { transition-delay: 0.25s; }
 
 .option:hover { background: rgba(232, 195, 123, 0.08); border-color: rgba(232, 195, 123, 0.3); }
 .option .marker { width: 18px; height: 18px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.2); flex-shrink: 0; position: relative; transition: all 0.2s ease; }
@@ -162,8 +166,9 @@ body {
 .toast.show { transform: translate(-50%, 0); }
 
 .overlay { position: fixed; inset: 0; background: rgba(10, 12, 26, 0.85); backdrop-filter: blur(10px); display: none; justify-content: center; align-items: center; padding: 30px; z-index: 2000; text-align: center; }
-.overlay.show { display: flex; animation: fadeInScreen 0.3s; }
-.overlay-content { max-width: 420px; padding: 34px; background: rgba(248, 113, 113, 0.1); border: 1px solid rgba(248, 113, 113, 0.3); border-radius: 20px; }
+.overlay.show { display: flex; }
+.overlay-content { max-width: 420px; padding: 34px; background: rgba(248, 113, 113, 0.1); border: 1px solid rgba(248, 113, 113, 0.3); border-radius: 20px; opacity: 0; transform: scale(0.9); transition: opacity 0.3s ease, transform 0.3s ease; }
+.overlay.show .overlay-content { opacity: 1; transform: scale(1); }
 .overlay-content h2 { font-size: 20px; color: #fca5a5; margin-bottom: 12px; }
 .overlay-content p { color: var(--text-main); font-size: 15px; line-height: 1.5; }
 </style>
@@ -175,7 +180,7 @@ body {
 <div class="curtain-text" id="curtainText"><h2>До завтрашнего дня...</h2></div>
 
 <div id="screen-intro">
-    <div class="intro-logo-container">
+    <div class="intro-logo-container" id="logoContainer">
         <img class="intro-logo-img" src="Без%20названия46_20261110012711.png" alt="Логотип" onerror="this.style.display='none'">
     </div>
 </div>
@@ -196,8 +201,7 @@ body {
 </div>
 
 <div class="wrapper">
-    <!-- ЭКРАН РЕГИСТРАЦИИ -->
-    <div id="screen-register" class="screen active anim-screen">
+    <div id="screen-register" class="screen active">
         <div class="glass-panel">
             <div class="header"><h1>Добро пожаловать</h1><div class="subtitle">Давайте познакомимся</div></div>
             <form id="registerForm" onsubmit="handleRegister(event)">
@@ -212,7 +216,6 @@ body {
         </div>
     </div>
 
-    <!-- ЭКРАН КАЛЕНДАРЯ -->
     <div id="screen-calendar" class="screen">
         <div class="header">
             <h1>Адвент-календарь</h1>
@@ -222,7 +225,6 @@ body {
         <div class="calendar-grid" id="calendarGrid"></div>
     </div>
 
-    <!-- ЭКРАН ТЕСТА -->
     <div id="screen-test" class="screen">
         <div class="glass-panel">
             <div class="test-header">
@@ -237,7 +239,6 @@ body {
         </div>
     </div>
 
-    <!-- ЭКРАН БЛОКИРОВКИ -->
     <div id="screen-blocked" class="screen">
         <div class="glass-panel blocked-screen">
             <div class="icon">🚫</div>
@@ -333,6 +334,11 @@ function startCalendar() {
     showScreen('calendar');
 }
 
+// Вспомогательная функция для появления элементов
+function makeVisible(el, delay) {
+    setTimeout(() => el.classList.add('visible'), delay);
+}
+
 function renderCalendar() {
     const grid = document.getElementById('calendarGrid');
     grid.innerHTML = '';
@@ -356,8 +362,7 @@ function renderCalendar() {
         const status = getDayStatus(day);
         const card = document.createElement('div');
         card.className = `day-card ${status}`;
-        card.style.animationDelay = `${day * 0.03}s`;
-
+        
         let labelText = 'Закрыто';
         if (status === 'completed') labelText = 'Пройдено';
         else if (status === 'available') labelText = 'Открыть';
@@ -366,6 +371,9 @@ function renderCalendar() {
         card.innerHTML = `<div class="day-number">${day}</div><div class="day-label">${labelText}</div>`;
         card.addEventListener('click', () => onDayClick(day, status));
         grid.appendChild(card);
+        
+        // Плавное появление карточек с задержкой
+        makeVisible(card, day * 40);
     }
 }
 
@@ -379,12 +387,22 @@ function onDayClick(day, status) {
 function showScreen(name) {
     document.querySelectorAll('.screen').forEach(s => {
         s.classList.remove('active');
-        s.classList.remove('anim-screen');
+        s.classList.remove('visible'); // Сбрасываем класс видимости
     });
     const screen = document.getElementById('screen-' + name);
     screen.classList.add('active');
-    void screen.offsetWidth; 
-    screen.classList.add('anim-screen');
+    
+    // Запуск анимации появления экрана
+    setTimeout(() => {
+        screen.classList.add('visible');
+        
+        // Если это регистрация, анимируем поля
+        if (name === 'register') {
+            document.querySelectorAll('#screen-register .form-group, #screen-register .form-row, #screen-register .btn').forEach(el => {
+                el.classList.add('visible');
+            });
+        }
+    }, 50);
 }
 
 function backToCalendar() {
@@ -406,7 +424,7 @@ function openTest(day) {
     startTime = Date.now();
     document.getElementById('testDayBadge').textContent = `День ${day}`;
     showScreen('test');
-    loadQuestion();
+    setTimeout(loadQuestion, 400);
 }
 
 function loadQuestion() {
@@ -416,21 +434,26 @@ function loadQuestion() {
     
     const qEl = document.getElementById('questionText');
     qEl.textContent = q.question;
-    qEl.style.animation = 'none';
-    qEl.offsetHeight; 
-    qEl.style.animation = 'fadeInScreen 0.4s ease-out forwards';
-
+    qEl.classList.remove('visible');
+    
     document.getElementById('questionCounter').textContent = `Вопрос ${currentQuestion + 1} из ${questions.length}`;
     document.getElementById('progressBar').style.width = `${(currentQuestion / questions.length) * 100}%`;
     
     const optionsEl = document.getElementById('options');
     optionsEl.innerHTML = '';
+    
+    // Появление вопроса
+    setTimeout(() => qEl.classList.add('visible'), 50);
+
     q.options.forEach((option, index) => {
         const div = document.createElement('div');
         div.className = 'option';
         div.innerHTML = `<div class="marker"></div><span>${option}</span>`;
         div.onclick = () => selectOption(index, div);
         optionsEl.appendChild(div);
+        
+        // Появление вариантов ответа каскадом
+        makeVisible(div, 100 + (index * 50));
     });
 }
 
@@ -535,11 +558,29 @@ function showToast(message) {
     draw();
 })();
 
-loadData();
-setTimeout(() => {
-    document.getElementById('screen-intro').classList.add('hidden');
-    if (currentUser) startCalendar(); else showScreen('register');
-}, 4000);
+// АНИМАЦИЯ ИНТРО
+document.addEventListener('DOMContentLoaded', () => {
+    loadData();
+    
+    const logoContainer = document.getElementById('logoContainer');
+    const introScreen = document.getElementById('screen-intro');
+    
+    // Показываем логотип
+    setTimeout(() => {
+        logoContainer.classList.add('visible');
+    }, 100);
+
+    // Убираем через 4 секунды
+    setTimeout(() => {
+        logoContainer.style.transform = 'scale(1.1) translateY(-20px)';
+        logoContainer.style.opacity = '0';
+        
+        setTimeout(() => {
+            introScreen.classList.add('hidden');
+            if (currentUser) startCalendar(); else showScreen('register');
+        }, 1000); // Ждем пока логотип исчезнет
+    }, 4000);
+});
 </script>
 </body>
 </html>
