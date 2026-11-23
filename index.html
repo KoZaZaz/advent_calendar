@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Новогодний Адвент-календарь</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,7 +18,7 @@
     --glass-highlight: rgba(255, 255, 255, 0.2);
     --text-main: #fdfbf7;
     --text-dim: #a0a5b8;
-    --gold: #e8c37b; 
+    --gold: #e8c37b;
     --gold-glow: rgba(232, 195, 123, 0.4);
     --success: #34d399;
     --error: #f87171;
@@ -49,20 +49,18 @@ body {
 
 #snowCanvas { position: fixed; inset: 0; z-index: -1; pointer-events: none; }
 
-/* ИНТРО (ЛОГОТИП) */
+/* ИНТРО */
 #screen-intro { position: fixed; inset: 0; display: flex; justify-content: center; align-items: center; z-index: 5000; background: var(--bg-dark); transition: opacity 1s ease, visibility 1s ease; }
 #screen-intro.hidden { opacity: 0; visibility: hidden; }
-
-/* Убираем CSS-анимации, которые глючат в браузере. Всё делает JS */
 .intro-logo-container { position: relative; display: flex; justify-content: center; align-items: center; opacity: 0; transform: scale(0.9) translateY(20px); transition: all 1s ease-out; }
 .intro-logo-container.visible { opacity: 1; transform: scale(1) translateY(0); }
-.intro-logo-img { width: 220px; height: auto; filter: drop-shadow(0 0 25px var(--gold-glow)); transition: transform 0.5s ease; }
+.intro-logo-img { width: 220px; height: auto; filter: drop-shadow(0 0 25px var(--gold-glow)); }
+@media (max-width: 600px) { .intro-logo-img { width: 160px; } }
 
-/* СТЕКЛО */
-.wrapper { max-width: 980px; margin: 0 auto; position: relative; }
+/* СТЕКЛО (только для теста/блокировки) */
 .glass-panel { position: relative; max-width: 720px; margin: 0 auto; padding: 40px; background: var(--glass-bg); backdrop-filter: blur(25px) saturate(140%); -webkit-backdrop-filter: blur(25px) saturate(140%); border: 1px solid var(--glass-border); border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), inset 0 1px 0 var(--glass-highlight); }
 .glass-panel::before { content: ''; position: absolute; inset: 0; border-radius: 24px; background: linear-gradient(140deg, rgba(255,215,0,0.05) 0%, transparent 40%, transparent 60%, rgba(255,255,255,0.02) 100%); pointer-events: none; }
-@media (max-width: 600px) { .glass-panel { padding: 30px 20px; border-radius: 20px; } .intro-logo-img { width: 160px; } }
+@media (max-width: 600px) { .glass-panel { padding: 30px 20px; border-radius: 20px; } }
 
 /* ЭКРАНЫ */
 .screen { display: none; }
@@ -80,7 +78,6 @@ body {
 .form-group:nth-child(2) { transition-delay: 0.2s; }
 .form-row { display: flex; gap: 15px; opacity: 0; transform: translateX(-15px); transition: opacity 0.4s ease, transform 0.4s ease; transition-delay: 0.3s; }
 .form-row .form-group { flex: 1; opacity: 1; transform: none; transition: none; }
-
 .form-group.visible, .form-row.visible { opacity: 1; transform: translateX(0); }
 
 .form-group label { display: block; font-size: 11px; color: var(--gold); margin-bottom: 8px; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
@@ -88,33 +85,175 @@ body {
 .form-group input::placeholder { color: rgba(255, 255, 255, 0.15); }
 .form-group input:focus { border-color: var(--gold); background: rgba(232, 195, 123, 0.05); box-shadow: 0 0 15px rgba(232, 195, 123, 0.15); }
 
-.btn { display: inline-flex; align-items: center; justify-content: center; padding: 15px 24px; font-size: 14px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #1a1c3b; background: linear-gradient(135deg, #fdfbf7, var(--gold)); border: none; border-radius: 12px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 15px rgba(232, 195, 123, 0.3); margin-top: 10px; font-family: inherit; width: 100%; opacity: 0; transform: translateX(-15px); transition: opacity 0.4s ease, transform 0.4s ease; transition-delay: 0.4s; }
+.btn { display: inline-flex; align-items: center; justify-content: center; padding: 15px 24px; font-size: 14px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #1a1c3b; background: linear-gradient(135deg, #fdfbf7, var(--gold)); border: none; border-radius: 12px; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 0 4px 15px rgba(232, 195, 123, 0.3); margin-top: 10px; font-family: inherit; width: 100%; opacity: 0; transform: translateX(-15px); transition-delay: 0.4s; }
 .btn.visible { opacity: 1; transform: translateX(0); }
 .btn:hover:not(:disabled) { transform: translateY(-2px); background: linear-gradient(135deg, #fff, #f0d190); box-shadow: 0 8px 25px rgba(232, 195, 123, 0.6); }
 .btn.ghost { background: rgba(255, 255, 255, 0.03); color: var(--gold); border: 1px solid rgba(232, 195, 123, 0.3); box-shadow: none; }
 
-/* КАЛЕНДАРЬ */
-.calendar-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
-@media (max-width: 780px) { .calendar-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; } }
-@media (max-width: 480px) { .calendar-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; } }
+/* ============================================
+   ЁЛКА
+   ============================================ */
+.wrapper { max-width: 980px; margin: 0 auto; position: relative; }
 
-.day-card { aspect-ratio: 1; position: relative; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); opacity: 0; transform: scale(0.8) translateY(15px); transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
-.day-card.visible { opacity: 1; transform: scale(1) translateY(0); }
+#screen-calendar { text-align: center; }
 
-.day-card::before { content: ''; position: absolute; inset: 0; border-radius: 16px; background: linear-gradient(140deg, rgba(255, 255, 255, 0.1) 0%, transparent 40%); pointer-events: none; }
-.day-number { font-size: 22px; font-weight: 700; line-height: 1; color: #fff; transition: all 0.3s ease; }
-.day-label { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; color: var(--text-dim); margin-top: 2px; font-weight: 500; }
+.tree-stage {
+    position: relative;
+    width: 100%;
+    max-width: 560px;
+    margin: 10px auto 0;
+    aspect-ratio: 0.72;
+    /* transform-origin будет меняться из JS для наезда на шар */
+    transition: transform 1.6s cubic-bezier(0.65, 0, 0.35, 1);
+    transform-origin: 50% 20%;
+}
+.tree-stage.zoomed { /* управляется из JS через inline style */ }
 
-.day-card.available { background: rgba(232, 195, 123, 0.1); border-color: rgba(232, 195, 123, 0.4); box-shadow: 0 0 20px rgba(232, 195, 123, 0.1); }
-.day-card:hover, .day-card:active { transform: translateY(-4px) scale(1.02) !important; box-shadow: 0 8px 25px rgba(232, 195, 123, 0.4); border-color: var(--gold); }
-.day-card:hover .day-number, .day-card.available .day-number { color: var(--gold); }
+.tree-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.6)); }
 
-.day-card.completed { background: rgba(52, 211, 153, 0.08); border-color: rgba(52, 211, 153, 0.3); }
-.day-card.completed .day-number { color: var(--success); }
-.day-card.completed::after { content: '✓'; position: absolute; top: 6px; right: 8px; color: var(--success); font-size: 12px; font-weight: 700; }
-.day-card.locked { cursor: not-allowed; opacity: 0.3; filter: grayscale(1); }
+/* Свечение ёлки */
+.tree-svg .tree-glow { filter: blur(6px); opacity: 0.35; }
 
-/* ТЕСТ */
+/* Шары */
+.ornament {
+    position: absolute;
+    width: 9%;              /* относительно stage */
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: clamp(11px, 2.6vw, 16px);
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease, filter 0.3s ease;
+    z-index: 2;
+    /* базовая «выпуклость» шара */
+    background: radial-gradient(circle at 30% 28%, rgba(255,255,255,0.55), transparent 45%),
+                radial-gradient(circle at 70% 75%, rgba(0,0,0,0.35), transparent 55%),
+                var(--ornament-color, #d94a4a);
+    box-shadow: inset -3px -4px 8px rgba(0,0,0,0.35),
+                inset 3px 4px 8px rgba(255,255,255,0.25),
+                0 4px 12px rgba(0,0,0,0.5),
+                0 0 0 2px rgba(255,215,0,0.15);
+    opacity: 0;
+    animation: ornamentAppear 0.5s ease forwards;
+}
+@keyframes ornamentAppear {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+    to   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* Колпачок крепления */
+.ornament::before {
+    content: '';
+    position: absolute;
+    top: -18%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 22%;
+    height: 16%;
+    background: linear-gradient(180deg, #d4af37, #8a6d1f);
+    border-radius: 2px 2px 0 0;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
+
+.ornament.available {
+    box-shadow: inset -3px -4px 8px rgba(0,0,0,0.35),
+                inset 3px 4px 8px rgba(255,255,255,0.25),
+                0 4px 12px rgba(0,0,0,0.5),
+                0 0 0 2px rgba(255,215,0,0.6),
+                0 0 25px 6px var(--ornament-glow, rgba(232,195,123,0.5));
+    animation: ornamentAppear 0.5s ease forwards, availablePulse 2s ease-in-out infinite;
+}
+@keyframes availablePulse {
+    0%, 100% { box-shadow: inset -3px -4px 8px rgba(0,0,0,0.35), inset 3px 4px 8px rgba(255,255,255,0.25), 0 4px 12px rgba(0,0,0,0.5), 0 0 0 2px rgba(255,215,0,0.6), 0 0 25px 6px var(--ornament-glow, rgba(232,195,123,0.5)); }
+    50%      { box-shadow: inset -3px -4px 8px rgba(0,0,0,0.35), inset 3px 4px 8px rgba(255,255,255,0.25), 0 4px 12px rgba(0,0,0,0.5), 0 0 0 3px rgba(255,215,0,0.9), 0 0 40px 12px var(--ornament-glow, rgba(232,195,123,0.8)); }
+}
+
+.ornament.completed {
+    filter: saturate(0.55) brightness(0.75);
+    opacity: 0.8 !important;
+}
+.ornament.completed::after {
+    content: '✓';
+    position: absolute;
+    inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 1.1em; font-weight: 900;
+    text-shadow: 0 0 6px rgba(52,211,153,1), 0 0 12px rgba(52,211,153,0.8);
+    border-radius: 50%;
+    background: rgba(52, 211, 153, 0.15);
+}
+
+.ornament.locked {
+    filter: saturate(0.3) brightness(0.5);
+    cursor: not-allowed;
+    opacity: 0.55 !important;
+    animation: ornamentAppear 0.5s ease forwards;
+}
+
+.ornament.missed {
+    filter: saturate(0.4) brightness(0.6);
+    cursor: pointer;
+    opacity: 0.7 !important;
+    animation: ornamentAppear 0.5s ease forwards;
+}
+
+.ornament:hover, .ornament:active {
+    transform: translate(-50%, -50%) scale(1.12) !important;
+    z-index: 5;
+}
+
+/* ЗВЕЗДА (шар 24) */
+.star-node {
+    position: absolute;
+    width: 16%;
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    z-index: 4;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.35s ease, filter 0.35s ease;
+    opacity: 0;
+    animation: ornamentAppear 0.6s ease forwards;
+}
+.star-node svg { width: 100%; height: 100%; overflow: visible; }
+.star-node .star-svg { filter: drop-shadow(0 0 10px #ffe580) drop-shadow(0 0 20px #ffb347); }
+.star-node.locked .star-svg { filter: saturate(0.2) brightness(0.5); }
+.star-node.locked { cursor: not-allowed; opacity: 0.5; }
+.star-node.available .star-svg { animation: starPulse 1.8s ease-in-out infinite; }
+@keyframes starPulse {
+    0%, 100% { filter: drop-shadow(0 0 10px #ffe580) drop-shadow(0 0 20px #ffb347); }
+    50%      { filter: drop-shadow(0 0 20px #fff3c0) drop-shadow(0 0 40px #ffb347) drop-shadow(0 0 60px #ff8c00); }
+}
+.star-node:hover, .star-node:active { transform: translate(-50%, -50%) scale(1.15) !important; }
+
+.star-node .star-number {
+    position: absolute;
+    bottom: -6px; left: 50%; transform: translateX(-50%);
+    font-size: clamp(9px, 1.8vw, 12px);
+    font-weight: 800;
+    color: #1a1c3b;
+    background: var(--gold);
+    padding: 1px 6px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(232,195,123,0.6);
+    white-space: nowrap;
+}
+
+/* Инфо о сегодняшнем дне */
+.today-info { margin-top: 20px; display: inline-block; padding: 8px 18px; border-radius: 20px; font-size: 12px; font-weight: 600; color: var(--gold); background: rgba(232, 195, 123, 0.1); border: 1px solid rgba(232, 195, 123, 0.3); }
+
+/* Подсказка «нажми на шар» */
+.tree-hint { margin-top: 14px; font-size: 12px; color: var(--text-dim); letter-spacing: 1px; text-transform: uppercase; }
+
+/* ============================================
+   ТЕСТ
+   ============================================ */
 .test-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; gap: 12px; }
 .back-btn { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 215, 0, 0.15); color: var(--text-dim); padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
 .back-btn:hover { background: rgba(255, 255, 255, 0.1); color: var(--gold); }
@@ -129,13 +268,12 @@ body {
 .question.visible { opacity: 1; transform: translateY(0); }
 
 .options { display: flex; flex-direction: column; gap: 10px; }
-.option { display: flex; align-items: center; gap: 14px; padding: 16px 18px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; cursor: pointer; transition: all 0.2s ease; font-size: 14px; font-weight: 500; opacity: 0; transform: translateX(-15px); transition: opacity 0.4s ease, transform 0.4s ease; }
+.option { display: flex; align-items: center; gap: 14px; padding: 16px 18px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; cursor: pointer; transition: opacity 0.4s ease, transform 0.4s ease, background 0.2s ease, border-color 0.2s ease; font-size: 14px; font-weight: 500; opacity: 0; transform: translateX(-15px); }
 .option.visible { opacity: 1; transform: translateX(0); }
 .option:nth-child(1) { transition-delay: 0.1s; }
 .option:nth-child(2) { transition-delay: 0.15s; }
 .option:nth-child(3) { transition-delay: 0.2s; }
 .option:nth-child(4) { transition-delay: 0.25s; }
-
 .option:hover { background: rgba(232, 195, 123, 0.08); border-color: rgba(232, 195, 123, 0.3); }
 .option .marker { width: 18px; height: 18px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.2); flex-shrink: 0; position: relative; transition: all 0.2s ease; }
 .option.selected { background: rgba(232, 195, 123, 0.15); border-color: var(--gold); }
@@ -149,13 +287,12 @@ body {
 .curtain.open.left { transform: translateX(0); }
 .curtain.open.right { transform: translateX(0); }
 
-/* ТЕКСТ ШТОРОК */
 .curtain-text { position: fixed; inset: 0; z-index: 5000; display: flex; justify-content: center; align-items: center; pointer-events: none; }
 .curtain-text h2 { font-family: 'Playfair Display', serif; font-style: italic; font-size: 32px; color: var(--gold); text-align: center; text-shadow: 0 0 20px var(--gold-glow); padding: 0 20px; opacity: 0; transform: scale(0.8) translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
 .curtain-text.show h2 { opacity: 1; transform: scale(1) translateY(0); }
 @media (max-width: 600px) { .curtain-text h2 { font-size: 24px; } }
 
-/* БЛОКИРОВКА И УВЕДОМЛЕНИЯ */
+/* БЛОКИРОВКА */
 .blocked-screen { text-align: center; }
 .blocked-screen .icon { font-size: 56px; margin-bottom: 14px; }
 .blocked-screen h2 { color: var(--error); font-size: 22px; margin-bottom: 12px; font-weight: 700; }
@@ -171,6 +308,12 @@ body {
 .overlay.show .overlay-content { opacity: 1; transform: scale(1); }
 .overlay-content h2 { font-size: 20px; color: #fca5a5; margin-bottom: 12px; }
 .overlay-content p { color: var(--text-main); font-size: 15px; line-height: 1.5; }
+
+/* Мобилки */
+@media (max-width: 600px) {
+    .tree-stage { max-width: 100%; aspect-ratio: 0.7; }
+    .ornament { width: 11%; font-size: clamp(10px, 3.2vw, 14px); }
+}
 </style>
 </head>
 <body>
@@ -201,6 +344,7 @@ body {
 </div>
 
 <div class="wrapper">
+
     <div id="screen-register" class="screen active">
         <div class="glass-panel">
             <div class="header"><h1>Добро пожаловать</h1><div class="subtitle">Давайте познакомимся</div></div>
@@ -217,12 +361,49 @@ body {
     </div>
 
     <div id="screen-calendar" class="screen">
-        <div class="header">
-            <h1>Адвент-календарь</h1>
+        <div class="header" style="margin-bottom: 0;">
+            <h1>Новогодняя ёлка</h1>
             <div class="subtitle" id="userGreeting">Привет!</div>
-            <div class="today-info" id="todayInfo" style="margin-top: 15px; display: inline-block; padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 600;"></div>
         </div>
-        <div class="calendar-grid" id="calendarGrid"></div>
+        <div class="tree-stage" id="treeStage">
+            <svg class="tree-svg" viewBox="0 0 400 560" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+                <!-- Свечение за ёлкой -->
+                <defs>
+                    <radialGradient id="treeGlow" cx="50%" cy="50%" r="60%">
+                        <stop offset="0%" stop-color="#2e7d4f" stop-opacity="0.5"/>
+                        <stop offset="100%" stop-color="#2e7d4f" stop-opacity="0"/>
+                    </radialGradient>
+                    <linearGradient id="treeGrad1" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#1f6b45"/>
+                        <stop offset="100%" stop-color="#0f3d27"/>
+                    </linearGradient>
+                    <linearGradient id="treeGrad2" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#2a7d52"/>
+                        <stop offset="100%" stop-color="#145232"/>
+                    </linearGradient>
+                    <linearGradient id="treeGrad3" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#359063"/>
+                        <stop offset="100%" stop-color="#1a5f3a"/>
+                    </linearGradient>
+                </defs>
+                <ellipse cx="200" cy="320" rx="230" ry="240" fill="url(#treeGlow)"/>
+                <!-- Ствол -->
+                <rect x="185" y="460" width="30" height="70" rx="4" fill="#4a2f1a"/>
+                <rect x="185" y="460" width="10" height="70" fill="#5c3b21" opacity="0.6"/>
+                <!-- Ярусы ёлки (снизу вверх, перекрываются) -->
+                <polygon points="200,150 60,330 340,330" fill="url(#treeGrad3)"/>
+                <polygon points="200,90 75,270 325,270" fill="url(#treeGrad2)"/>
+                <polygon points="200,30 90,210 310,210" fill="url(#treeGrad1)"/>
+                <!-- Блики на ветках -->
+                <polygon points="200,150 60,330 200,330" fill="#ffffff" opacity="0.04"/>
+                <polygon points="200,90 75,270 200,270" fill="#ffffff" opacity="0.05"/>
+                <polygon points="200,30 90,210 200,210" fill="#ffffff" opacity="0.06"/>
+            </svg>
+
+            <!-- Шары и звезда будут сгенерированы JS -->
+        </div>
+        <div class="today-info" id="todayInfo"></div>
+        <div class="tree-hint">Нажми на шар, чтобы открыть задание</div>
     </div>
 
     <div id="screen-test" class="screen">
@@ -245,13 +426,13 @@ body {
             <h2>Тест заблокирован</h2>
             <p>Вы покинули страницу во время прохождения теста.</p>
             <div class="warning" id="blockedReason"></div>
-            <button class="btn ghost full" onclick="backToCalendar()" style="margin-top: 20px;">← К календарю</button>
+            <button class="btn ghost full" onclick="backToCalendar()" style="margin-top: 20px;">← К ёлке</button>
         </div>
     </div>
 </div>
 
 <script>
-const TEST_MODE = true; 
+const TEST_MODE = true;
 const YEAR = new Date().getFullYear();
 const TOTAL_DAYS = 24;
 const STORAGE_KEY_PROGRESS = 'advent_progress_' + YEAR;
@@ -265,6 +446,47 @@ const questionPool = [
     { question: "Тег для создания ссылки?", options: ["<link>","<a>","<href>","<url>"], correct: 1 }
 ];
 
+/* Позиции шаров на ёлке: top/left в % относительно .tree-stage
+   Распределены по ярусам, хаотично, но без наложений.
+   Шар 24 — звезда, позиция задаётся отдельно (макушка). */
+const ORNAMENT_POSITIONS = {
+    1:  { top: 88, left: 50 },
+    2:  { top: 82, left: 32 },
+    3:  { top: 82, left: 68 },
+    4:  { top: 75, left: 18 },
+    5:  { top: 75, left: 82 },
+    6:  { top: 72, left: 50 },
+    7:  { top: 66, left: 36 },
+    8:  { top: 66, left: 64 },
+    9:  { top: 60, left: 22 },
+    10: { top: 60, left: 78 },
+    11: { top: 57, left: 50 },
+    12: { top: 51, left: 38 },
+    13: { top: 51, left: 62 },
+    14: { top: 46, left: 26 },
+    15: { top: 46, left: 74 },
+    16: { top: 43, left: 50 },
+    17: { top: 37, left: 40 },
+    18: { top: 37, left: 60 },
+    19: { top: 32, left: 30 },
+    20: { top: 32, left: 70 },
+    21: { top: 28, left: 50 },
+    22: { top: 22, left: 40 },
+    23: { top: 22, left: 60 }
+    // 24 — звезда, отдельно
+};
+
+/* Цвета шаров (циклично) */
+const ORNAMENT_COLORS = [
+    { bg: '#d94a4a', glow: 'rgba(217,74,74,0.6)' },   // красный
+    { bg: '#e8c37b', glow: 'rgba(232,195,123,0.6)' }, // золотой
+    { bg: '#3b82f6', glow: 'rgba(59,130,246,0.6)' },  // синий
+    { bg: '#c0c0c0', glow: 'rgba(192,192,192,0.5)' }, // серебряный
+    { bg: '#22c55e', glow: 'rgba(34,197,94,0.6)' },   // зелёный
+    { bg: '#a855f7', glow: 'rgba(168,85,247,0.6)' },  // фиолетовый
+    { bg: '#f97316', glow: 'rgba(249,115,22,0.6)' }   // оранжевый
+];
+
 let state = { progress: {} };
 let currentUser = null;
 let currentDay = null;
@@ -274,7 +496,6 @@ let score = 0;
 let selectedAnswer = null;
 let testActive = false;
 let violations = 0;
-let startTime = null;
 let isTransitioning = false;
 
 function getQuestionsForDay(day) {
@@ -311,7 +532,7 @@ function handleRegister(event) {
 }
 
 function getTodayDayNumber() {
-    if (TEST_MODE) return 1; 
+    if (TEST_MODE) return 1;
     const now = new Date();
     if (now.getMonth() !== 11 || now.getFullYear() !== YEAR) return null;
     const day = now.getDate();
@@ -320,7 +541,7 @@ function getTodayDayNumber() {
 
 function getDayStatus(day) {
     if (state.progress[day]?.completed) return 'completed';
-    if (TEST_MODE) return 'available'; 
+    if (TEST_MODE) return 'available';
     const today = getTodayDayNumber();
     if (today === null) return 'locked';
     if (day === today) return 'available';
@@ -328,58 +549,119 @@ function getDayStatus(day) {
     return 'locked';
 }
 
+/* ---------- Отрисовка ёлки ---------- */
+function renderTree() {
+    const stage = document.getElementById('treeStage');
+    // удаляем старые шары/звезду (оставляем SVG)
+    stage.querySelectorAll('.ornament, .star-node').forEach(el => el.remove());
+
+    // Шары 1–23
+    for (let day = 1; day <= 23; day++) {
+        const pos = ORNAMENT_POSITIONS[day];
+        if (!pos) continue;
+        const color = ORNAMENT_COLORS[(day - 1) % ORNAMENT_COLORS.length];
+        const status = getDayStatus(day);
+
+        const el = document.createElement('div');
+        el.className = `ornament ${status}`;
+        el.style.top = pos.top + '%';
+        el.style.left = pos.left + '%';
+        el.style.setProperty('--ornament-color', color.bg);
+        el.style.setProperty('--ornament-glow', color.glow);
+        el.style.animationDelay = (day * 30) + 'ms';
+        el.innerHTML = `<span>${day}</span>`;
+        el.addEventListener('click', () => onDayClick(day, status));
+        stage.appendChild(el);
+    }
+
+    // Звезда (24)
+    const status24 = getDayStatus(24);
+    const star = document.createElement('div');
+    star.className = `star-node ${status24}`;
+    star.style.top = '12%';
+    star.style.left = '50%';
+    star.style.animationDelay = (24 * 30) + 'ms';
+    star.innerHTML = `
+        <svg class="star-svg" viewBox="0 0 100 100">
+            <defs>
+                <linearGradient id="starGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#fff3c0"/>
+                    <stop offset="50%" stop-color="#ffd700"/>
+                    <stop offset="100%" stop-color="#ff9500"/>
+                </linearGradient>
+            </defs>
+            <polygon points="50,5 61,38 96,38 68,58 78,92 50,72 22,92 32,58 4,38 39,38"
+                     fill="url(#starGrad)" stroke="#b8860b" stroke-width="1.5"/>
+        </svg>
+        <span class="star-number">24</span>
+    `;
+    star.addEventListener('click', () => onDayClick(24, status24));
+    stage.appendChild(star);
+}
+
+/* ---------- Календарь ---------- */
 function startCalendar() {
     document.getElementById('userGreeting').textContent = `Привет, ${currentUser.name} из ${currentUser.class}${currentUser.letter}!`;
-    renderCalendar();
+    renderTree();
+    updateTodayInfo();
     showScreen('calendar');
+    // Плавное появление ёлки + наезд на сегодняшний шар
+    setTimeout(() => animateTreeEntrance(), 200);
 }
 
-// Вспомогательная функция для появления элементов
-function makeVisible(el, delay) {
-    setTimeout(() => el.classList.add('visible'), delay);
-}
-
-function renderCalendar() {
-    const grid = document.getElementById('calendarGrid');
-    grid.innerHTML = '';
-    const todayInfo = document.getElementById('todayInfo');
-    
+function updateTodayInfo() {
+    const info = document.getElementById('todayInfo');
     if (TEST_MODE) {
-        todayInfo.textContent = `Режим тестирования: доступны все дни`;
-        todayInfo.style.color = '#1a1c3b';
-        todayInfo.style.background = 'var(--gold)';
-        todayInfo.style.border = '1px solid var(--gold)';
+        info.textContent = 'Режим тестирования: доступны все дни';
     } else {
-        todayInfo.style.color = 'var(--gold)';
-        todayInfo.style.background = 'rgba(232, 195, 123, 0.1)';
-        todayInfo.style.border = '1px solid rgba(232, 195, 123, 0.3)';
         const today = getTodayDayNumber();
-        if (today !== null) todayInfo.textContent = `Сегодня ${today} декабря · доступно задание дня ${today}`;
-        else todayInfo.textContent = 'Календарь откроется 1 декабря';
+        if (today !== null) info.textContent = `Сегодня ${today} декабря · нажми на шар №${today}`;
+        else info.textContent = 'Ёлка откроется 1 декабря';
     }
+}
 
-    for (let day = 1; day <= TOTAL_DAYS; day++) {
-        const status = getDayStatus(day);
-        const card = document.createElement('div');
-        card.className = `day-card ${status}`;
-        
-        let labelText = 'Закрыто';
-        if (status === 'completed') labelText = 'Пройдено';
-        else if (status === 'available') labelText = 'Открыть';
-        else if (status === 'missed') labelText = 'Пропущено';
-        
-        card.innerHTML = `<div class="day-number">${day}</div><div class="day-label">${labelText}</div>`;
-        card.addEventListener('click', () => onDayClick(day, status));
-        grid.appendChild(card);
-        
-        // Плавное появление карточек с задержкой
-        makeVisible(card, day * 40);
+function animateTreeEntrance() {
+    const stage = document.getElementById('treeStage');
+    if (!stage) return;
+    // Сброс
+    stage.style.transition = 'none';
+    stage.style.transform = 'scale(1.35)';
+    stage.style.opacity = '0';
+
+    // Появление
+    requestAnimationFrame(() => {
+        stage.style.transition = 'transform 1.4s cubic-bezier(0.65,0,0.35,1), opacity 1s ease';
+        stage.style.opacity = '1';
+        stage.style.transform = 'scale(1)';
+    });
+
+    // Наезд на сегодняшний шар
+    const today = TEST_MODE ? 1 : getTodayDayNumber();
+    if (today && ORNAMENT_POSITIONS[today]) {
+        const pos = ORNAMENT_POSITIONS[today];
+        setTimeout(() => zoomToOrnament(pos.top, pos.left), 1500);
+    } else if (today === 24) {
+        setTimeout(() => zoomToOrnament(12, 50), 1500);
     }
+}
+
+function zoomToOrnament(topPct, leftPct) {
+    const stage = document.getElementById('treeStage');
+    if (!stage) return;
+    // transform-origin в точке шара (в % от stage)
+    stage.style.transformOrigin = `${leftPct}% ${topPct}%`;
+    stage.style.transition = 'transform 1.6s cubic-bezier(0.65,0,0.35,1)';
+    stage.style.transform = 'scale(1.8)';
+    // Через 1.6с возвращаемся
+    setTimeout(() => {
+        stage.style.transformOrigin = '50% 20%';
+        stage.style.transform = 'scale(1)';
+    }, 2200);
 }
 
 function onDayClick(day, status) {
     if (status === 'available') openTest(day);
-    else if (status === 'locked') showToast(`Этот день ещё закрыт`);
+    else if (status === 'locked') showToast('Этот шар ещё закрыт');
     else if (status === 'missed') showToast('Этот день уже прошёл.');
     else if (status === 'completed') showToast('Вы уже прошли это задание ✓');
 }
@@ -387,16 +669,12 @@ function onDayClick(day, status) {
 function showScreen(name) {
     document.querySelectorAll('.screen').forEach(s => {
         s.classList.remove('active');
-        s.classList.remove('visible'); // Сбрасываем класс видимости
+        s.classList.remove('visible');
     });
     const screen = document.getElementById('screen-' + name);
     screen.classList.add('active');
-    
-    // Запуск анимации появления экрана
     setTimeout(() => {
         screen.classList.add('visible');
-        
-        // Если это регистрация, анимируем поля
         if (name === 'register') {
             document.querySelectorAll('#screen-register .form-group, #screen-register .form-row, #screen-register .btn').forEach(el => {
                 el.classList.add('visible');
@@ -409,7 +687,8 @@ function backToCalendar() {
     if (testActive && !confirm('Выйти из теста? Прогресс текущего дня будет потерян.')) return;
     testActive = false;
     showScreen('calendar');
-    renderCalendar();
+    renderTree();
+    updateTodayInfo();
 }
 
 function openTest(day) {
@@ -421,7 +700,6 @@ function openTest(day) {
     isTransitioning = false;
     testActive = true;
     violations = 0;
-    startTime = Date.now();
     document.getElementById('testDayBadge').textContent = `День ${day}`;
     showScreen('test');
     setTimeout(loadQuestion, 400);
@@ -431,18 +709,14 @@ function loadQuestion() {
     selectedAnswer = null;
     isTransitioning = false;
     const q = questions[currentQuestion];
-    
     const qEl = document.getElementById('questionText');
     qEl.textContent = q.question;
     qEl.classList.remove('visible');
-    
     document.getElementById('questionCounter').textContent = `Вопрос ${currentQuestion + 1} из ${questions.length}`;
-    document.getElementById('progressBar').style.width = `${(currentQuestion / questions.length) * 100}%`;
-    
+    document.getElementById('progressBar').style.width = `${((currentQuestion + 1) / questions.length) * 100}%`;
+
     const optionsEl = document.getElementById('options');
     optionsEl.innerHTML = '';
-    
-    // Появление вопроса
     setTimeout(() => qEl.classList.add('visible'), 50);
 
     q.options.forEach((option, index) => {
@@ -451,9 +725,7 @@ function loadQuestion() {
         div.innerHTML = `<div class="marker"></div><span>${option}</span>`;
         div.onclick = () => selectOption(index, div);
         optionsEl.appendChild(div);
-        
-        // Появление вариантов ответа каскадом
-        makeVisible(div, 100 + (index * 50));
+        setTimeout(() => div.classList.add('visible'), 100 + index * 50);
     });
 }
 
@@ -465,7 +737,7 @@ function selectOption(index, div) {
     selectedAnswer = index;
     const q = questions[currentQuestion];
     if (selectedAnswer === q.correct) score++;
-    
+
     setTimeout(() => {
         currentQuestion++;
         if (currentQuestion < questions.length) {
@@ -478,34 +750,34 @@ function selectOption(index, div) {
 
 function finishDayAndShowCurtains() {
     testActive = false;
-    state.progress[currentDay] = { completed: true, score: score, total: questions.length, date: new Date().toISOString() };
+    state.progress[currentDay] = { completed: true, date: new Date().toISOString() };
     saveProgress();
-    
-    renderCalendar(); 
+    renderTree();
 
     const curtainLeft = document.getElementById('curtainLeft');
     const curtainRight = document.getElementById('curtainRight');
     const curtainText = document.getElementById('curtainText');
-
     curtainLeft.classList.add('open');
     curtainRight.classList.add('open');
-
-    setTimeout(() => { curtainText.classList.add('show'); }, 1000);
-    setTimeout(() => { curtainText.classList.remove('show'); }, 3200);
+    setTimeout(() => curtainText.classList.add('show'), 1000);
+    setTimeout(() => curtainText.classList.remove('show'), 3200);
     setTimeout(() => {
         curtainLeft.classList.remove('open');
         curtainRight.classList.remove('open');
     }, 4200);
     setTimeout(() => {
         showScreen('calendar');
-    }, 5400); 
+        updateTodayInfo();
+    }, 5400);
 }
 
+/* Защита */
 window.addEventListener('beforeunload', (e) => {
     if (testActive) { e.preventDefault(); e.returnValue = 'Вы уверены?'; return e.returnValue; }
 });
-document.addEventListener('visibilitychange', () => { if (document.hidden && testActive) registerViolation('Уход со страницы'); });
-window.addEventListener('blur', () => { if (testActive) registerViolation('Потеря фокуса'); });
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden && testActive) registerViolation('Уход со страницы');
+});
 document.addEventListener('contextmenu', (e) => { if (testActive) e.preventDefault(); });
 document.addEventListener('copy', (e) => { if (testActive) e.preventDefault(); });
 document.addEventListener('keydown', (e) => {
@@ -519,7 +791,11 @@ document.addEventListener('keydown', (e) => {
 function registerViolation(reason) {
     violations++;
     if (violations >= 2) blockTest(`Нарушений: ${violations}. Причина: ${reason}`);
-    else { document.getElementById('overlay').classList.add('show'); setTimeout(() => document.getElementById('overlay').classList.remove('show'), 3000); showToast(`⚠️ Нарушение (${violations}/2)`); }
+    else {
+        document.getElementById('overlay').classList.add('show');
+        setTimeout(() => document.getElementById('overlay').classList.remove('show'), 3000);
+        showToast(`⚠️ Нарушение (${violations}/2)`);
+    }
 }
 
 function blockTest(reason) {
@@ -536,6 +812,7 @@ function showToast(message) {
     clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
+/* Снег */
 (function initSnow() {
     const canvas = document.getElementById('snowCanvas');
     const ctx = canvas.getContext('2d');
@@ -553,32 +830,26 @@ function showToast(message) {
         }
         requestAnimationFrame(draw);
     }
-    window.addEventListener('resize', resize); 
-    init(); 
+    window.addEventListener('resize', resize);
+    init();
     draw();
 })();
 
-// АНИМАЦИЯ ИНТРО
+/* Интро */
 document.addEventListener('DOMContentLoaded', () => {
     loadData();
-    
     const logoContainer = document.getElementById('logoContainer');
     const introScreen = document.getElementById('screen-intro');
-    
-    // Показываем логотип
-    setTimeout(() => {
-        logoContainer.classList.add('visible');
-    }, 100);
 
-    // Убираем через 4 секунды
+    setTimeout(() => logoContainer.classList.add('visible'), 100);
+
     setTimeout(() => {
         logoContainer.style.transform = 'scale(1.1) translateY(-20px)';
         logoContainer.style.opacity = '0';
-        
         setTimeout(() => {
             introScreen.classList.add('hidden');
             if (currentUser) startCalendar(); else showScreen('register');
-        }, 1000); // Ждем пока логотип исчезнет
+        }, 1000);
     }, 4000);
 });
 </script>
